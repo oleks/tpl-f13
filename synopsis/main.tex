@@ -1,0 +1,35 @@
+\documentclass[a4paper,twocolumn]{article}
+
+\usepackage[fancy]{template}
+\usepackage{survival-pack}
+
+\setup{%
+  subject={Topics in Programming Languages},%
+  assignment={Deciding associativity},%
+  date={May 12, 2013.}%
+}
+\setupLocation[short=DIKU]%
+{Datalogisk institut, Copenhagen University}
+\setupAuthor{Kristoffer Søholm \& Oleksandr Shturmov}
+
+\newcommand{\powerset}[1]{\ensuremath{\mathcal{P}\p{#1}}}
+\newcommand{\mt}[1]{\ensuremath{\mathtt{#1}}}
+\newcommand{\ms}[1]{\ensuremath{\mathtt{#1}^*}}
+\newcommand{\ch}[1]{\ensuremath{\mathcal{CH}\p{#1}}}
+
+\begin{document}
+
+\twocolumn[\maketitle]
+\thispagestyle{first}
+
+\input{abstract}
+
+\vspace{0.2in}
+
+\input{keywords}
+
+\input{introduction}
+
+%\input{references}
+
+\end{document}
