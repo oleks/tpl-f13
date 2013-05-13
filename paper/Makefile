@@ -1,5 +1,5 @@
 BASENAME  = main
-FILENAME  = tpl-f13-shturmov-soeholm-synopsis
+FILENAME  = tpl-f13-shturmov-soeholm
 OUTDIR    = $(CURDIR)/output
 OUTFILE   = $(OUTDIR)/$(FILENAME).pdf
 
