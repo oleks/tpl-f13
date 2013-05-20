@@ -1,0 +1,118 @@
+\section{Builtins}
+
+\subsection{Chaining}
+
+We consider first whether simply chaining applications of the operator is
+associative. That is, for each binary operator $\oplus:t\times t \rightarrow
+t$, we consider whether $\p{a \oplus b} \oplus c = a \oplus \p{ b \oplus c }$
+by the L0 specification. Unary operators are trivially associative under
+chaining. For binary operators with arguments of two different types, as well
+as ternary and n-ary operators, it depends. Later, we'll allow intermixing of
+operators.
+
+\subsubsection{Arithmetic operators}
+
+L0 has a range of binary arithmetic operators, namely \texttt{+}, \texttt{*},
+\texttt{-}, \texttt{/}, \texttt{pow}, and \tilde, where the last operator is a
+unary negation operator. The operators defined on arguments of type either
+\intt{} or \realt{} (L0 is strongly-typed), yielding a value of the same type.
+
+As of now, there are no restrictions in the L0 standard as to how \realt{}s are
+to be represented, so we confine our attention to \intt{}s. For \intt{}s we
+assume a $p$-bit two's complement representation.
+
+Our observations are summarized in \referToTable{assoc-chaining-arithop}.
+
+\makeTable
+{assoc-chaining-arithop}
+{Associativity of chaining arithmetic operators.}
+{|c|c|}
+{\textbf{Operator} & \textbf{Chaining is associative}}
+{
+  \texttt{+}   & yes \\
+  \texttt{*}   & yes \\
+  \texttt{-}   & no \\
+  \texttt{\%}  & no \\
+  \texttt{pow} & no \\
+  \tilde       & yes\footnotemark[1]
+}
+
+\subsubsection{Relational operators}
+
+L0 has a couple binary relational operators, namely \texttt{=}, \texttt{<}, and
+\texttt{<=}, having the obvious semantics. The operators are defined on
+arguments both of type either \intt{} or \realt{}, yielding a value
+of type \boolt{}.
+
+Relational operators are not chainable in L0. These operators are only
+interesting in combination with other operators.
+
+\subsubsection{Logical operators}
+
+L0 has a couple logical operators, namely \texttt{\&\&}, \texttt{||}, and
+\texttt{not}, where the last is a unary negation operator. The operators are
+defined on arguments of type \boolt{}, yielding a value of type \boolt{}.
+
+Our observations are summarized in \referToTable{assoc-chaining-logop}.
+
+\makeTable
+{assoc-chaining-logop}
+{Associativity of chaining logical operators.}
+{|c|c|}
+{\textbf{Operator} & \textbf{Chaining is associative}}
+{
+  \texttt{\&\&} & yes \\
+  \texttt{||}   & yes \\
+  \texttt{not}  & yes\footnotemark[1]
+}
+
+\footnotetext[1]{All unary operators are associative by definition.}
+
+\subsubsection{Bitwise operators}
+
+L0 has a range of bitwise operators, namely \texttt{\^}, \texttt{\&},
+\texttt{|}, \texttt{>{}>}, and \texttt{<{}<}, having semantics as in C. The
+operators are defined on arguments of type \intt{}, yielding a value of type
+\intt{}.
+
+Our observations are summarized in \referToTable{assoc-chaining-bitop}.
+
+\makeTable
+{assoc-chaining-bitop}
+{Associativity of chaining bitwise operators.}
+{|c|c|}
+{\textbf{Operator} & \textbf{Chaining is associative}}
+{
+  \texttt{\^} & yes \\
+  \texttt{\&} & yes \\
+  \texttt{|}  & yes \\
+  \texttt{>{}>} & yes \\
+  \texttt{<{}<} & yes
+}
+
+\subsubsection{Other functions}
+
+L0 has a range of other builtins, e.g. various second-order array combinators.
+Of particular interest to us are the functions \texttt{concat}, \texttt{min},
+and \texttt{max}. The other builtins do not meet the requirement of
+unifiability of their type with an associative type, or fall prey to the fact
+that functions are not first-class citizens in L0. These operators are
+trivially associative.
+
+Our observations are summarized in \referToTable{assoc-chaining-bitop}.
+
+\makeTable
+{assoc-chaining-bitop}
+{Associativity of chaining bitwise operators.}
+{|c|c|}
+{\textbf{Operator} & \textbf{Chaining is associative}}
+{
+  \texttt{concat} & yes \\
+  \texttt{min} & yes \\
+  \texttt{max}  & yes
+}
+
+\subsection{Combining}
+
+Light's associativity test\cite{light-mathematica}.
+

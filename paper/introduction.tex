@@ -5,3 +5,20 @@ associative function. Others will require for the function to be explicitly
 marked as ``associative''. Others still will try to deduce the associativity
 property, and warn the user if the function clearly isn't associative.
 
+\subsection{An associative type}
+
+For ease of analysis, we introduce the concept of an \emph{associative type}
+--- a function type that unifies with the type of any associative function. An
+associative function consumes at least two values of type $t$, and returns a
+value of type $t$.
+
+We refer to functions that unify with the associative type, but are not
+themselves associative as \emph{not associative}. We refer to all other
+functions as \emph{associative}.
+
+In particular, we refer to functions that do not unify with an associative type
+as associative. This is to allow us to say that e.g. unary functions are
+associative. Although this does not make sense mathematically, our reasoning is
+that functions that do not unify with an associative type cannot be chained
+into a function whos type unifies with an associative type.
+

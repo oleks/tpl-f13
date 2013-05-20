@@ -10,12 +10,23 @@
 }
 \setupLocation[short=DIKU]%
 {Datalogisk institut, Copenhagen University}
-\setupAuthor{Kristoffer Søholm \& Oleksandr Shturmov}
+\setupAuthor[%
+  addendum=\texttt{\{soeholm,oleks\}@diku.dk} %
+]{Kristoffer Søholm \& Oleksandr Shturmov}
 
 \newcommand{\powerset}[1]{\ensuremath{\mathcal{P}\p{#1}}}
 \newcommand{\mt}[1]{\ensuremath{\mathtt{#1}}}
 \newcommand{\ms}[1]{\ensuremath{\mathtt{#1}^*}}
 \newcommand{\ch}[1]{\ensuremath{\mathcal{CH}\p{#1}}}
+
+\newcommand\boolt[0]{\texttt{bool}}
+\newcommand\realt[0]{\texttt{real}}
+\newcommand\chart[0]{\texttt{char}}
+\newcommand\intt[0]{\texttt{int}}
+\newcommand\aliases[1]{\textrm{aliases}(#1)}
+\renewcommand\tilde[0]{{\raise.17ex\hbox{$\scriptstyle\sim$}}}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
 
 \begin{document}
 
@@ -28,11 +39,14 @@
 \vspace{0.2in}
 
 \input{keywords}
+
+\vspace{0.2in}
+
 ]
 
-\ \\
+\input{introduction}
 
-%\input{introduction}
+\input{builtins}
 
 \input{references}
 
