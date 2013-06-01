@@ -1,9 +1,40 @@
 \section{Introduction}
 
+A function $f:S\times S\rightarrow S$ is associative iff.
+\[\forall\ x,y,z\in S\ .\ f\p{f\p{x,y}, z} = f\p{x, f\p{y, z}}\]
+
+One of the benefits of such functions is that a sequence of values
+$\p{x_k}_{k=0}^n,\ x_k\in S$, can be aggregated into a single value $x\in S$,
+using $n$ applications of $f$. This is more commonly known as a
+\emph{reduction}. For instance, we can compute the sum of $n$ integers using
+$n$ binary additions.
+
+A straight-forward reduction strategy is $f\p{f\p{\ldots f\p{f\p{x_0, x_1},
+x_2}, \ldots , x_{n-1}}, x_n}$, or equivalently, $f\p{x_0, f\p{x_1, \ldots,
+f\p{x_{n-2}, f\p{x_{n-1}, x_n}}\ldots}}$. This is known as a linear left and
+right \emph{fold}, respectively.
+
+Reductions get more interesting on single-instruction multiple data (SIMD)
+architectures. A reduction can be performed in parallel time $O\p{\log n}$ on
+$n$ processors, or ${n/m}+O\p{\log m}$ on $m$ processors, using a technique
+called \emph{parallel prefix scan}, or simply scan.
+
+Scan is an interesting technique in and of itself as it can serve as a basic
+building block in the design of parallel algorithms, replacing various parallel
+memory referencing strategies. If applicable, this technique typically reduces
+the asymptotic bounds by a factor of $O\p{\log n}$\cite{blelloch}.
+
+Scan is an operation that takes a function $f:S\times S\rightarrow S$, an
+identity value $i\in S$ for $f$, and a sequence $\p{x_k}_{k=1}^n,\ x_k\in S$.
+It produces the sequence $\seq{i, x_0, f\p{x_1,x_2}, \ldots, f\p{x_{n-1},
+x_n}}$.
+
 Some parallelizing compilers will assume that the user has supplied an
 associative function. Others will require for the function to be explicitly
 marked as ``associative''. Others still will try to deduce the associativity
 property, and warn the user if the function clearly isn't associative.
+
+\subsection{Undecidability}
 
 \subsection{An associative type}
 
