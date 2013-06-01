@@ -1,40 +1,66 @@
 \section{Introduction}
 
-A function $f:S\times S\rightarrow S$ is associative iff.
-\[\forall\ x,y,z\in S\ .\ f\p{f\p{x,y}, z} = f\p{x, f\p{y, z}}\]
+An infix operator $\oplus:S\times S\rightarrow S$ is associative iff.
+\[\forall\ x,y,z\in S\ .\ \p{x \oplus y} \oplus z = x \oplus \p{y \oplus z}.\]
 
 One of the benefits of such functions is that a sequence of values
-$\p{x_k}_{k=0}^n,\ x_k\in S$, can be aggregated into a single value $x\in S$,
-using $n$ applications of $f$. This is more commonly known as a
-\emph{reduction}. For instance, we can compute the sum of $n$ integers using
-$n$ binary additions.
+$\p{x_k}_{k=1}^n,\ x_k\in S$, can be aggregated into a single value $x\in S$,
+using $n-1$ applications of $\oplus$, i.e. $x = x_1 \oplus \cdots \oplus
+x_{n-1} \oplus x_n$. This is more commonly known as a \emph{reduction}.  For
+instance, we can compute the sum of $n$ integers using $n-1$ binary additions.
 
-A straight-forward reduction strategy is $f\p{f\p{\ldots f\p{f\p{x_0, x_1},
-x_2}, \ldots , x_{n-1}}, x_n}$, or equivalently, $f\p{x_0, f\p{x_1, \ldots,
-f\p{x_{n-2}, f\p{x_{n-1}, x_n}}\ldots}}$. This is known as a linear left and
-right \emph{fold}, respectively.
+A straight-forward reduction strategy is $\p{\cdots \p{\p{x_1 \oplus x_2}
+\oplus x_3} \cdots \oplus x_{n-1}} \oplus x_n$, or equivalently, $x_1 \oplus
+\p{x_2 \oplus \cdots \p{x_{n-2} \oplus \p{x_{n-1}, x_n}} \cdots }$.  This is
+known as a linear left and right \emph{fold}, respectively.
 
 Reductions get more interesting on single-instruction multiple data (SIMD)
-architectures. A reduction can be performed in parallel time $O\p{\log n}$ on
-$n$ processors, or ${n/m}+O\p{\log m}$ on $m$ processors, using a technique
-called \emph{parallel prefix scan}, or simply scan.
+architectures. A reduction on a SIMD machine can be performed in parallel time
+$O\p{\log n}$ on $n$ processors, or ${n/m}+O\p{\log m}$ on $m$ processors,
+using a technique called \emph{parallel prefix scan}, or simply scan.
 
 Scan is an interesting technique in and of itself as it can serve as a basic
-building block in the design of parallel algorithms, replacing various parallel
-memory referencing strategies. If applicable, this technique typically reduces
+building block in the design of parallel algorithms, replacing primitive
+parallel memory referencing. If applicable, this technique typically reduces
 the asymptotic bounds by a factor of $O\p{\log n}$\cite{blelloch}.
 
-Scan is an operation that takes a function $f:S\times S\rightarrow S$, an
-identity value $i\in S$ for $f$, and a sequence $\p{x_k}_{k=1}^n,\ x_k\in S$.
-It produces the sequence $\seq{i, x_0, f\p{x_1,x_2}, \ldots, f\p{x_{n-1},
-x_n}}$.
+Scan takes an infix operator $\oplus:S\times S\rightarrow S$, an identity value
+$i\in S$, such that $i\oplus i = i$, and a sequence $\p{x_k}_{k=1}^n,\ x_k\in
+S$.  It produces the sequence $\p{i, x_1, x_1 \oplus x_2, \ldots, x_1 \oplus
+\cdots \oplus x_{n-1} \oplus x_n}$.
 
-Some parallelizing compilers will assume that the user has supplied an
-associative function. Others will require for the function to be explicitly
-marked as ``associative''. Others still will try to deduce the associativity
-property, and warn the user if the function clearly isn't associative.
+Parallel prefix scan performs a tree-like reduction rather than a linear
+reduction. The sequence $\p{x_i \oplus x_{i+1}}_{i=1}^{n-1}$ is computed first,
+by pairwise applying $\oplus$ to the elements of the sequence. The sequence
+$\p{\p{x_i \oplus x_{i+1}} \oplus \p{x_{i+2} \oplus x_{i+3}}}_{i=1}^{n-3}$ is
+computed second, by pairwise applying $\oplus$ to the elements of the previous
+sequence, and so on until a scalar is reached.
+
+It is therefore important for the correctness of the method that the function
+supplied to scan is an associative function.
+
+Some compilers will assume that the user has supplied an associative function.
+Others will require for the function to be explicitly marked as
+``associative''. Others still will try to deduce the associativity property,
+and warn the user if the function isn't clearly associative.
 
 \subsection{Undecidability}
+
+Undecidability of the property is proven by reduction from the halting
+problem. We construct a Turing machine (TM) $M$ that takes as input a pair of values $x,y\in S$.
+
+Assume there exists a TM $A$, that given an arbitrary TM, accepts iff $M$
+accepts or rejects on any input, and rejects otherwise. That is, $A$ is a
+decider for the associativity problem.
+
+We construct $M$ such that it returns a constant $z\in S$ iff $A(M)$ accepts
+and loops otherwise. More formally:
+
+\[M\p{x,y} = \left\{ \begin{array}{l l} z & \text{if $A(M)$} \\ M\p{x,y} &
+\text{otherwise} \end{array} \right.\]
+
+$M$ is associative iff $M$ halts. The halting problem is undecidable in
+general.
 
 \subsection{An associative type}
 
