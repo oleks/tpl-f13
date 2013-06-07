@@ -42,7 +42,10 @@ supplied to scan is an associative function.
 Some compilers will assume that the user has supplied an associative function.
 Others will require for the function to be explicitly marked as
 ``associative''. Others still will try to deduce the associativity property,
-and warn the user if the function isn't clearly associative.
+and warn the user if the function isn't clearly associative. The last is clearly
+preferable, especially for scientific computing languages such as L0, since such a bug can
+be very hard to find (the user might not be aware that associativity is a requirement at
+all!).
 
 \subsection{Undecidability}
 
