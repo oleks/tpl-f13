@@ -72,20 +72,29 @@ $z\in S$ otherwise:
 If $A(M)$ accepts, $M$ is not associative, if $A(M)$ rejects, $M$ is
 associative, which contradicts our assumptions about $A$. \end{proof}
 
-\subsection{An associative type}
+\subsection{The associative type}
 
-For ease of analysis, we introduce the concept of an \emph{associative type}
---- a function type that unifies with the type of any associative function. An
-associative function consumes at least two values of type $t$, and returns a
-value of type $t$.
+For ease of analysis, we introduce the concept of the \emph{associative type}
+--- a function type that unifies with the type of any associative function. We
+identify this type from the following observation: an associative function
+consumes at least two values of some type $S$, and returns a value of type $S$.
 
-We refer to functions that unify with the associative type, but are not
-themselves associative as \emph{not associative}. We refer to all other
-functions as \emph{associative}.
+We define it formally as follows:
 
-In particular, we refer to functions that do not unify with an associative type
-as associative. This is to allow us to say that e.g. unary functions are
-associative. Although this does not make sense mathematically, our reasoning is
-that functions that do not unify with an associative type cannot be chained
-into a function whos type unifies with an associative type.
+\[\oplus:S \boxtimes S \boxtimes T_1 \boxtimes T_2 \boxtimes \cdots \boxtimes
+T_n \rightarrow S, \]
 
+where
+
+\begin{itemize}
+
+\item $\p{T_k}_{k=1}^n$ for $n\geq 0$ is a sequence of arbitrary types.
+
+\item $\boxtimes$ is the commutative equivalent of the regular $\times$, i.e.
+the arguments to $\oplus$ can be rearranged under unification.
+
+\end{itemize}
+
+For example, the following types unify with the associative type: $f:S \times S
+\times S \rightarrow S$, $g:S \times S \times \mathcal{Z} \rightarrow S$, $h:S
+\times \mathcal{Z} \times S \rightarrow S$, etc.
