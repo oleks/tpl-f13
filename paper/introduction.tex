@@ -11,8 +11,8 @@ instance, we can compute the sum of $n$ integers using $n-1$ binary additions.
 
 A straight-forward reduction strategy is $\p{\cdots \p{\p{x_1 \oplus x_2}
 \oplus x_3} \cdots \oplus x_{n-1}} \oplus x_n$, or equivalently, $x_1 \oplus
-\p{x_2 \oplus \cdots \p{x_{n-2} \oplus \p{x_{n-1}, x_n}} \cdots }$.  This is
-known as a linear left and right \emph{fold}, respectively.
+\p{x_2 \oplus \cdots \p{x_{n-2} \oplus \p{x_{n-1} \oplus x_n}} \cdots }$.  This
+is known as a linear left or right \emph{fold}, respectively.
 
 Reductions get more interesting on single-instruction multiple data (SIMD)
 architectures. A reduction on a SIMD machine can be performed in parallel time
