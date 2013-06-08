@@ -1,0 +1,21 @@
+\section{Normalization}
+
+The straight-forward way of testing associativity is by replacement and
+normalization. We can test whether $\oplus$ is associative by considering
+whether $\p{x \oplus y} \oplus z$ is semantically equivalent to $x \oplus \p{y
+\oplus z}$.
+
+For instance, if $\oplus\p{x,y} = x\cdot c + y \cdot c$, for some constant
+$c\in S$, we consider whether the following equality holds for all $x$, $y$,
+and $z$:
+
+\begin{align*}
+x\cdot c + \p{y\cdot c + z\cdot c}\cdot c &= \p{x\cdot c + y\cdot c}\cdot c + z\cdot c \\
+x\cdot c + y\cdot c^2 + z\cdot c^2 &= x\cdot c^2 + y\cdot c^2 + z\cdot c \\
+x\cdot c + z\cdot c^2 &= x\cdot c^2 + z\cdot c
+\end{align*}
+
+This holds for all $x$, $y$, and $z$ only if $\card{c}=1$.
+
+This technique requires the rewriting of arbitrary program text into some
+normal form that subsequently allows equality comparison of program text.
