@@ -17,7 +17,8 @@ for all $x$, $y$, and $z$.
 x\lt c \lt c \lp y\lt c \lt c \lp z\lt c &= x\lt c \lp y\lt c \lt c \lp z\lt c \lt c \\
 x\lt c \lt c \lp z\lt c &= x\lt c \lp z\lt c \lt c
 \end{align*}
-\caption[]{}
+\caption[]{If $\oplus\p{x,y}=x\lt c \lp y\lt c$ is associative, the above
+should hold for all $x$, $y$ and $z$.}
 \label{figure:first-equality}
 \end{figure*}
 
@@ -39,6 +40,18 @@ fashion. An expression is represented as a tree, traverse the tree, identify
 all parentheses. Sort the parenetheses by depth in the tree. Take the
 parentheses in order. Apply parenthesing rewritings first.
 
+No need to unfold all parens, just all those that replace variables. Let x and
+y be the variable names of the arguments in question. Let z be variable name
+that does not occur in the program text of f. Let f1 be the original program
+text f. Let f2 be the original program text f with y replaced by z, and x
+replaced by (f1) (in that order). Let f3 be the original program text f with y
+replaced by z, and x replaced by y (in that order). Let f4 be the original
+program text f with y replaced by (f3). This leads to exactly 4 parentheses
+that we wish unfolded. To do this, we follow the P- rewriting rules.
+
+Allocate space for
+four instances of f, f1 and f2.  Replace all occurances of x with x', 
+
 We summarise the rules for arithmetic operators in \referToFigure{rewriting-arithop}.
 
 \begin{figure*}[htbp!]
@@ -46,20 +59,20 @@ We summarise the rules for arithmetic operators in \referToFigure{rewriting-arit
 \proc{P-TimesR}:{\over
 \p{e_1 \lp e_2 \lp \cdots \lp e_n} \lt e \rightarrow e_1\lt e \lp e_2\lt e \lp
 \cdots \lp e_n \lt e
-}\\
+}\p{n\geq 2}\\
 \proc{P-TimesL}:{\over
 e\lt\p{e_1 \lp e_2 \lp \cdots \lp e_n} \rightarrow e\lt e_1 \lp e\lt e_2 \lp \cdots
 \lp e\lt e_n
-}
+}\p{n\geq 2}
 \end{align*}
 
 \begin{align*}
 \proc{P-PlusR}:{\over
 \p{e_1 \lp e_2 \lp \cdots \lp e_n} \lp e \rightarrow e_1 \lp e_2 \lp \cdots \lp e_n \lp e
-}\\
+}\p{n\geq 2}\\
 \proc{P-PlusL}:{\over
 e \lp \p{e_1 \lp e_2 \lp \cdots \lp e_n} \rightarrow e \lp e_1 \lp e_2 \lp \cdots \lp e_n
-}
+}\p{n\geq 2}
 \end{align*}
 
 \begin{align*}
@@ -72,7 +85,7 @@ e_1 \lm e_2 \rightarrow e_1 \lp \lneg e_2
 \proc{P-Negate}:{\over
 \lneg\p{e_1 \lp e_2 \lp \cdots \lp e_n} \rightarrow \lneg e_1 \lp \lneg e_2 \lp \cdots
 \lp \lneg e_n
-}
+}\p{n\geq 2}
 \end{align*}
 
 
@@ -86,36 +99,37 @@ e_1 \lm e_2 \rightarrow e_1 \lp \lneg e_2
 \proc{P-AndR}:{\over
 \p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \LAND e \rightarrow e_1\LAND e \LOR
 e_2\LAND e \LOR \cdots \LOR e_n \LAND e
-}\\
+}\p{n\geq 2}\\
 \proc{P-AndL}:{\over
 e\LAND\p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \rightarrow e\LAND e_1 \LOR e\LAND
 e_2 \LOR \cdots
 \LOR e\LAND e_n
-}
+}\p{n\geq 2}
 \end{align*}
 
 \begin{align*}
 \proc{P-OrR}:{\over
 \p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \LOR e \rightarrow e_1 \LOR e_2 \LOR
 \cdots \LOR e_n \LOR e
-}\\
+}\p{n\geq 2}\\
 \proc{P-OrL}:{\over
 e \LOR \p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \rightarrow e \LOR e_1 \LOR e_2
 \LOR \cdots \LOR e_n
-}
+}\p{n\geq 2}
 \end{align*}
 
 \begin{align*}
 \proc{P-Not}:{\over
 \LNOT\p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \rightarrow \LNOT e_1 \LOR \LNOT e_2
 \LOR \cdots \LOR \LNOT e_n
-}
+}\p{n\geq 2}
 \end{align*}
 
 \caption[]{Rewriting rules for logical operators.}
 \label{figure:rewriting-logop}
 \end{figure*}
 
+For bitwise operators we simply use Light's associativity test. 
 
 % \subsection{Generating variable constraints}
 
