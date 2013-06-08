@@ -29,41 +29,48 @@ $i\in S$, such that $i\oplus i = i$, and a sequence $\p{x_k}_{k=1}^n,\ x_k\in
 S$.  It produces the sequence $\p{i, x_1, x_1 \oplus x_2, \ldots, x_1 \oplus
 \cdots \oplus x_{n-1} \oplus x_n}$.
 
-Parallel prefix scan performs a tree-like reduction rather than a linear
-reduction. The sequence $\p{x_i \oplus x_{i+1}}_{i=1}^{n-1}$ is computed first,
-by pairwise applying $\oplus$ to the elements of the sequence. The sequence
-$\p{\p{x_i \oplus x_{i+1}} \oplus \p{x_{i+2} \oplus x_{i+3}}}_{i=1}^{n-3}$ is
-computed second, by pairwise applying $\oplus$ to the elements of the previous
-sequence, and so on until a scalar is reached.
+To do this, parallel prefix scan performs a tree-like reduction rather than a
+linear reduction. The sequence $\p{x_i \oplus x_{i+1}}_{i=1}^{n-1}$ is computed
+first, by pairwise applying $\oplus$ to the elements of the sequence. The
+sequence $\p{\p{x_i \oplus x_{i+1}} \oplus \p{x_{i+2} \oplus
+x_{i+3}}}_{i=1}^{n-3}$ is computed second, by pairwise applying $\oplus$ to the
+elements of the resulting sequence, and so on until a scalar is reached.
 
-It is therefore important for the correctness of the method that the function
-supplied to scan is an associative function.
+It is important for the correctness of the method that the function supplied to
+scan is an associative function. The requirements could be relaxed to making
+sure the function susceptible to tree-like reduction, but that would render the
+functions identified by this method not necessarily suitable for linear
+reductions. This would in turn discourage us from applying transformations to
+turn linear reductions into tree-like reductions: we could speed up the program
+by using parallel prefix scans rather than folds.
 
-Some compilers will assume that the user has supplied an associative function.
+Most compilers will assume that the user has supplied an associative function.
 Others will require for the function to be explicitly marked as
 ``associative''. Others still will try to deduce the associativity property,
-and warn the user if the function isn't clearly associative. The last is clearly
-preferable, especially for scientific computing languages such as L0, since such a bug can
-be very hard to find (the user might not be aware that associativity is a requirement at
-all!).
+and warn the user if the function isn't clearly associative. The last is
+clearly preferable, especially for scientific computing languages such as L0,
+since such a bug can be very hard to find (the user might not be aware that
+associativity is a requirement at all).
 
 \subsection{Undecidability}
 
-Undecidability of the property is proven by reduction from the halting
-problem. We construct a Turing machine (TM) $M$ that takes as input a pair of values $x,y\in S$.
+Undecidability of the property is proven similar to the halting problem.
 
-Assume there exists a TM $A$, that given an arbitrary TM, accepts iff $M$
-accepts or rejects on any input, and rejects otherwise. That is, $A$ is a
-decider for the associativity problem.
+\begin{proof} We construct a binary Turing machine (TM) $M$ that takes as input
+a pair of values $x,y\in S$.
 
-We construct $M$ such that it returns a constant $z\in S$ iff $A(M)$ accepts
-and loops otherwise. More formally:
+Assume there exists a TM $A$, that given an binary TM $M$, accepts if $M$ is
+associative, and rejects otherwise. That is, $A$ is a decider for the
+associativity problem.
 
-\[M\p{x,y} = \left\{ \begin{array}{l l} z & \text{if $A(M)$} \\ M\p{x,y} &
+We construct $M$ such that it returns $x$ if $A(M)$ accepts, and a constant
+$z\in S$ otherwise:
+
+\[M\p{x,y} = \left\{ \begin{array}{l l} x & \text{if $A(M)$} \\ z &
 \text{otherwise} \end{array} \right.\]
 
-$M$ is associative iff $M$ halts. The halting problem is undecidable in
-general.
+If $A(M)$ accepts, $M$ is not associative, if $A(M)$ rejects, $M$ is
+associative, which contradicts our assumptions about $A$. \end{proof}
 
 \subsection{An associative type}
 
