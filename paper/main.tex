@@ -28,6 +28,15 @@
 \newcommand\aliases[1]{\textrm{aliases}(#1)}
 \renewcommand\tilde[0]{{\raise.17ex\hbox{$\scriptstyle\sim$}}}
 
+\newcommand{\lp}[0]{\,\ifmmode \text{\texttt{+}} \else \texttt{+} \fi\,}
+\newcommand{\lt}[0]{\,\ifmmode \text{\texttt{*}} \else \texttt{*} \fi\,}
+\newcommand{\lm}[0]{\,\ifmmode \text{\texttt{-}} \else \texttt{-} \fi\,}
+\newcommand{\lneg}[0]{{}\ifmmode \text{\tilde} \else \tilde \fi{}}
+
+\newcommand{\LOR}[0]{\,\ifmmode \text{\texttt{||}} \else \texttt{||} \fi\,}
+\newcommand{\LAND}[0]{\,\ifmmode \text{\texttt{\&\&}} \else \texttt{\&\&} \fi\,}
+\newcommand{\LNOT}[0]{\,\ifmmode \text{\texttt{not}} \else \texttt{not} \fi\,}
+
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}
 
 \begin{document}

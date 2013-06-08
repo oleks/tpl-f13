@@ -7,17 +7,21 @@ can test whether $\oplus$ is associative by considering whether $\p{x \oplus y}
 \oplus z$ and $x \oplus \p{y \oplus z}$ can be rewritten to be syntactically
 equivalent.
 
-For instance, if $\oplus\p{x,y} = x\cdot c + y \cdot c$, for some constant
-$c\in S$, we consider whether the following equality holds for all $x$, $y$,
-and $z$:
+For instance, if $\oplus\p{x,y} = x\lt c \lp y \lt c$, for some constant $c\in
+S$, we consider whether the equality in \referToFigure{first-equality} holds
+for all $x$, $y$, and $z$.
 
+\begin{figure*}[htbp!]
 \begin{align*}
-\p{x\cdot c + y\cdot c}\cdot c + z\cdot c &= x\cdot c + \p{y\cdot c + z\cdot c}\cdot c \\
-x\cdot c \cdot c + y\cdot c \cdot c + z\cdot c &= x\cdot c + y\cdot c \cdot c + z\cdot c \cdot c \\
-x\cdot c \cdot c + z\cdot c &= x\cdot c + z\cdot c \cdot c
+\p{x\lt c \lp y\lt c}\lt c \lp z\lt c &= x\lt c \lp \p{y\lt c \lp z\lt c}\lt c \\
+x\lt c \lt c \lp y\lt c \lt c \lp z\lt c &= x\lt c \lp y\lt c \lt c \lp z\lt c \lt c \\
+x\lt c \lt c \lp z\lt c &= x\lt c \lp z\lt c \lt c
 \end{align*}
+\caption[]{}
+\label{figure:first-equality}
+\end{figure*}
 
-This analysis required \emph{rewriting} both expressions as a \emph{sum of
+This analysis requires \emph{rewriting} both expressions as a \emph{sum of
 products}, followed by \emph{common term elimination}. If $c$ is a constant, we
 can complete the analysis by \emph{constant folding}, and considering whether
 the left-hand side is syntactically equivalent to the right-hand side.
@@ -30,35 +34,109 @@ order, we can proceed freely.
 Another property that our rewriting rules must respect are overflows. We should
 keep in mind that we're dealing with modulo arithmetic.
 
-\subsection{Generating variable constraints}
+Unfolding all parens is straight-forward. Unparenthesise in a bottom-up
+fashion. An expression is represented as a tree, traverse the tree, identify
+all parentheses. Sort the parenetheses by depth in the tree. Take the
+parentheses in order. Apply parenthesing rewritings first.
 
-If instead, $\oplus\p{x,y,c} = x\cdot c + y \cdot c$, and we would like to know
-whether $\oplus$ is associative wrt. $x$ and $y$, we reach no useful
-conclusion. We can find out whether there exists a $c$ for which this property
-holds:
+We summarise the rules for arithmetic operators in \referToFigure{rewriting-arithop}.
 
+\begin{figure*}[htbp!]
 \begin{align*}
-x \cdot c^2 + z \cdot c &= x \cdot c + z \cdot c^2 \\
-x \cdot c + z &= x + z \cdot c \\
-x \cdot c - z \cdot c &= x - z \\
-c (x-z) &= x-z \\
-c &= {x-z\over x-z} \\
-c &= 1
+\proc{P-TimesR}:{\over
+\p{e_1 \lp e_2 \lp \cdots \lp e_n} \lt e \rightarrow e_1\lt e \lp e_2\lt e \lp
+\cdots \lp e_n \lt e
+}\\
+\proc{P-TimesL}:{\over
+e\lt\p{e_1 \lp e_2 \lp \cdots \lp e_n} \rightarrow e\lt e_1 \lp e\lt e_2 \lp \cdots
+\lp e\lt e_n
+}
 \end{align*}
 
-The compiler should at this point suggest that $c$ be replaced by a constant if
-the function is to be associative. Such an analysis may not reveal a constant, 
+\begin{align*}
+\proc{P-PlusR}:{\over
+\p{e_1 \lp e_2 \lp \cdots \lp e_n} \lp e \rightarrow e_1 \lp e_2 \lp \cdots \lp e_n \lp e
+}\\
+\proc{P-PlusL}:{\over
+e \lp \p{e_1 \lp e_2 \lp \cdots \lp e_n} \rightarrow e \lp e_1 \lp e_2 \lp \cdots \lp e_n
+}
+\end{align*}
 
-This implies that $\oplus$ is associative for all $x$, $y$, and $z$ only if
-$\card{c}=1$. Of course, if $c$ is a constant, it is known to us, and the
-equality conclusion can be reached directly without solving for $c$.
+\begin{align*}
+\proc{Minus}:{\over
+e_1 \lm e_2 \rightarrow e_1 \lp \lneg e_2
+}
+\end{align*}
 
-To reach this
-conclusion, we rewrote both expressions as a sum of products, and found a $c$
-such that the left-hand side is syntactically equivalent to the right-hand side
-after constant folding.
+\begin{align*}
+\proc{P-Negate}:{\over
+\lneg\p{e_1 \lp e_2 \lp \cdots \lp e_n} \rightarrow \lneg e_1 \lp \lneg e_2 \lp \cdots
+\lp \lneg e_n
+}
+\end{align*}
 
-This technique requires the rewriting of arbitrary program text into some
-normal form that subsequently allows equality comparison of program text.
 
-Common subexpression elimination
+\caption[]{Rewriting rules for arithmetic operators.}
+\label{figure:rewriting-arithop}
+\end{figure*}
+
+
+\begin{figure*}[htbp!]
+\begin{align*}
+\proc{P-AndR}:{\over
+\p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \LAND e \rightarrow e_1\LAND e \LOR
+e_2\LAND e \LOR \cdots \LOR e_n \LAND e
+}\\
+\proc{P-AndL}:{\over
+e\LAND\p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \rightarrow e\LAND e_1 \LOR e\LAND
+e_2 \LOR \cdots
+\LOR e\LAND e_n
+}
+\end{align*}
+
+\begin{align*}
+\proc{P-OrR}:{\over
+\p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \LOR e \rightarrow e_1 \LOR e_2 \LOR
+\cdots \LOR e_n \LOR e
+}\\
+\proc{P-OrL}:{\over
+e \LOR \p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \rightarrow e \LOR e_1 \LOR e_2
+\LOR \cdots \LOR e_n
+}
+\end{align*}
+
+\begin{align*}
+\proc{P-Not}:{\over
+\LNOT\p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \rightarrow \LNOT e_1 \LOR \LNOT e_2
+\LOR \cdots \LOR \LNOT e_n
+}
+\end{align*}
+
+\caption[]{Rewriting rules for logical operators.}
+\label{figure:rewriting-logop}
+\end{figure*}
+
+
+% \subsection{Generating variable constraints}
+
+% If instead, $\oplus\p{x,y,c} = x\lt c \lp y \lt c$, and we would like to know
+% whether $\oplus$ is associative wrt. $x$ and $y$, we reach no useful
+% conclusion. We can find out whether there exists a $c$ for which this
+% property holds:
+
+% \begin{align*}
+% x \lt c^2 \lp z \lt c &= x \lt c \lp z \lt c^2 \\
+% x \lt c \lp z &= x \lp z \lt c \\
+% x \lt c - z \lt c &= x - z \\
+% c (x-z) &= x-z \\
+% c &= {x-z\over x-z} \\
+% c &= 1
+% \end{align*}
+
+% The compiler should at this point suggest that $c$ be replaced by a constant
+% if the function is to be associative. Such an analysis may not reveal a
+% constant, 
+
+% This implies that $\oplus$ is associative for all $x$, $y$, and $z$ only if
+% $\card{c}=1$. Of course, if $c$ is a constant, it is known to us, and the
+% equality conclusion can be reached directly without solving for $c$.
