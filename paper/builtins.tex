@@ -2,13 +2,14 @@
 
 \subsection{Chaining}
 
-We consider first whether simply chaining applications of the operator is
-associative. That is, for each binary operator $\oplus:t\times t \rightarrow
-t$, we consider whether $\p{a \oplus b} \oplus c = a \oplus \p{ b \oplus c }$
-by the L0 specification. Unary operators are trivially associative under
-chaining. For binary operators with arguments of two different types, as well
-as ternary and n-ary operators, it depends. Later, we'll allow intermixing of
-operators.
+We consider first whether simply chaining applications of an operator is
+associative. That is, for each binary operator $\oplus:S\times S \rightarrow
+S$, we consider whether $\forall\ x,y,z\in S\ .\ \p{x \oplus y} \oplus z = x
+\oplus \p{y \oplus z}$ by the L0 specification.
+
+Unary operators are trivially associative under chaining. For binary operators
+with arguments of two different types, as well as ternary and n-ary operators,
+it depends. Later, we'll allow intermixing of operators.
 
 \subsubsection{Arithmetic operators}
 
@@ -66,7 +67,7 @@ Our observations are summarized in \referToTable{assoc-chaining-logop}.
   \texttt{not}  & yes\footnotemark[1]
 }
 
-\footnotetext[1]{All unary operators are associative by definition.}
+\footnotetext[1]{Unary operators can be regarded as associative by definition.}
 
 \subsubsection{Bitwise operators}
 
@@ -94,10 +95,11 @@ Our observations are summarized in \referToTable{assoc-chaining-bitop}.
 
 L0 has a range of other builtins, e.g. various second-order array combinators.
 Of particular interest to us are the functions \texttt{concat}, \texttt{min},
-and \texttt{max}. The other builtins do not meet the requirement of
-unifiability of their type with an associative type, or fall prey to the fact
-that functions are not first-class citizens in L0. These operators are
-trivially associative.
+and \texttt{max}, as they are clearly associative.
+
+The other builtins do not meet the requirement of unifiability of their type
+with an associative type, or fall prey to the fact that functions are not
+first-class citizens in L0.
 
 Our observations are summarized in \referToTable{assoc-array-combinators}.
 
@@ -115,4 +117,3 @@ Our observations are summarized in \referToTable{assoc-array-combinators}.
 \subsection{Combining}
 
 Light's associativity test\cite{light-mathematica}.
-
