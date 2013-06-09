@@ -14,9 +14,10 @@ it depends. Later, we'll allow intermixing of operators.
 \subsubsection{Arithmetic operators}
 
 L0 has a range of binary arithmetic operators, namely \texttt{+}, \texttt{*},
-\texttt{-}, \texttt{/}, \texttt{pow}, and \tilde, where the last operator is a
-unary negation operator. The operators defined on arguments of type either
-\intt{} or \realt{} (L0 is strongly-typed), yielding a value of the same type.
+\texttt{-}, \texttt{/}, \texttt{\%}, \texttt{pow}, and \tilde, where the last
+operator is a unary negation operator. The operators defined on arguments of
+type either \intt{} or \realt{} (L0 is strongly-typed), yielding a value of the
+same type.
 
 As of now, there are no restrictions in the L0 standard as to how \realt{}s are
 to be represented, so we confine our attention to \intt{}s. For \intt{}s we
@@ -33,6 +34,7 @@ Our observations are summarized in \referToTable{assoc-chaining-arithop}.
   \texttt{+}   & yes \\
   \texttt{*}   & yes \\
   \texttt{-}   & no \\
+  \texttt{/}   & no \\
   \texttt{\%}  & no \\
   \texttt{pow} & no \\
   \tilde       & yes\footnotemark[1]
