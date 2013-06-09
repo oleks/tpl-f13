@@ -37,7 +37,16 @@
 \newcommand{\LAND}[0]{\,\ifmmode \text{\texttt{\&\&}} \else \texttt{\&\&} \fi\,}
 \newcommand{\LNOT}[0]{\,\ifmmode \text{\texttt{not}} \else \texttt{not} \fi\,}
 
+\newcommand{\LCONCAT}[0]{\,\ifmmode \text{\texttt{concat}} \else \texttt{concat} \fi\,}
+\newcommand{\LMIN}[0]{\,\ifmmode \text{\texttt{min}} \else \texttt{min} \fi}
+\newcommand{\LMAX}[0]{\,\ifmmode \text{\texttt{max}} \else \texttt{max} \fi}
+
+
 \renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+% There's something funny with the font. It makes table cells have small
+% padding at the top. The following hack fixes that:
+\def\arraystretch{1.2}
 
 \begin{document}
 
