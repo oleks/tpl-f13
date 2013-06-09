@@ -40,13 +40,13 @@ Our observations are summarized in \referToTable{assoc-chaining-arithop}.
 
 \subsubsection{Relational operators}
 
-L0 has a couple binary relational operators, namely \texttt{=}, \texttt{<}, and
-\texttt{<=}, having the obvious semantics. The operators are defined on
+L0 has a couple binary relational operators, namely \texttt{<=}, \texttt{<}, and
+\texttt{=}, having the obvious semantics. The operators are defined on
 arguments both of type either \intt{} or \realt{}, yielding a value
 of type \boolt{}.
 
 Relational operators are not chainable in L0. These operators are only
-interesting in combination with other operators.
+interesting in combination with other operators.\footnotemark[2]
 
 \subsubsection{Logical operators}
 
@@ -68,6 +68,10 @@ Our observations are summarized in \referToTable{assoc-chaining-logop}.
 }
 
 \footnotetext[1]{Unary operators can be regarded as associative by definition.}
+
+\footnotetext[2]{This is no longer true at the time of our submission.
+\texttt{<=}, \texttt{<}, and \texttt{=} are now arithemtic operators, all
+left-fixed, and returning integral values.}
 
 \subsubsection{Bitwise operators}
 

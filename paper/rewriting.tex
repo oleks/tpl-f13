@@ -49,49 +49,102 @@ replaced by z, and x replaced by y (in that order). Let f4 be the original
 program text f with y replaced by (f3). This leads to exactly 4 parentheses
 that we wish unfolded. To do this, we follow the P- rewriting rules.
 
-Allocate space for
-four instances of f, f1 and f2.  Replace all occurances of x with x', 
+We need to use a work queue. Mention precedance rules.
 
-We summarise the rules for arithmetic operators in \referToFigure{rewriting-arithop}.
+The general algorithm: is the operator chain-associative? is the operator
+distributive over any other operators in L0?
+
+We summarise the rules for arithmetic operators in
+\referToFigure{rewriting-arithop}. The approach to constructing the rules in
+general is to consider every operator $\oplus$, associative under chaining. For
+each $\oplus$ we consider whether the $\oplus$ is distributive under every
+$\otimes$. This will allow us to apply the rules by following the rules of
+precedence of the language. We add an additional rule to transform chains.
+
+We don't need to define rules for expanding parentheses over non-assoc
+operators, as such functions won't associate anyways.
 
 \begin{figure*}[htbp!]
-\begin{align*}
-\proc{P-TimesR}:{\over
-\p{e_1 \lp e_2 \lp \cdots \lp e_n} \lt e \rightarrow e_1\lt e \lp e_2\lt e \lp
-\cdots \lp e_n \lt e
-}\p{n\geq 2}\\
-\proc{P-TimesL}:{\over
-e\lt\p{e_1 \lp e_2 \lp \cdots \lp e_n} \rightarrow e\lt e_1 \lp e\lt e_2 \lp \cdots
-\lp e\lt e_n
-}\p{n\geq 2}
-\end{align*}
 
-\begin{align*}
-\proc{P-PlusR}:{\over
-\p{e_1 \lp e_2 \lp \cdots \lp e_n} \lp e \rightarrow e_1 \lp e_2 \lp \cdots \lp e_n \lp e
-}\p{n\geq 2}\\
-\proc{P-PlusL}:{\over
-e \lp \p{e_1 \lp e_2 \lp \cdots \lp e_n} \rightarrow e \lp e_1 \lp e_2 \lp \cdots \lp e_n
-}\p{n\geq 2}
-\end{align*}
-
-\begin{align*}
-\proc{Minus}:{\over
-e_1 \lm e_2 \rightarrow e_1 \lp \lneg e_2
-}
-\end{align*}
-
-\begin{align*}
-\proc{P-Negate}:{\over
-\lneg\p{e_1 \lp e_2 \lp \cdots \lp e_n} \rightarrow \lneg e_1 \lp \lneg e_2 \lp \cdots
-\lp \lneg e_n
-}\p{n\geq 2}
-\end{align*}
-
-
-\caption[]{Rewriting rules for arithmetic operators.}
+\[
+\begin{matrix}
+\proc{P-Plus-Plus}:{\over
+\p{e_1 \lp e_2}\lp e \rightarrow e_1 \lp \p{ e_2 \lp e }
+}\\
+\proc{P-Times-Times}:{\over
+\p{e_1\lt e_2}\lt e \rightarrow e_1 \lt \p{ e_2 \lt e }
+}\\
+\end{matrix}
+\]
+\caption[]{Rewriting rules for chainable operators.}
 \label{figure:rewriting-arithop}
 \end{figure*}
+
+
+\begin{figure*}[htbp!]
+
+\[
+\begin{matrix}
+\proc{P-Times-Mod-R}:{\over
+\p{e_1 \lmod e_2}\lt e \rightarrow \p{ e_1 \lt e } \lmod \p{ e_2 \lt e }
+}\\
+\proc{P-Times-Plus-R}:{\over
+\p{e_1 \lp e_2}\lt e \rightarrow \p{ e_1 \lt e } \lp \p{ e_2 \lt e }
+}\\
+\proc{P-Times-Minus-R}:{\over
+\p{e_1 \lm e_2}\lt e \rightarrow \p{ e_1 \lt e } \lp \lneg\p{ e_2 \lt e }
+}\\
+\proc{P-Times-ShiftL-R}:{\over
+\p{e_1 \LBSL e_2}\lt e \rightarrow \p{ e_1 \lt e } \LBSL e_2
+}
+\end{matrix}
+\]
+\caption[]{Rewriting rules for arithmetic operators. The above are only
+right-distributions. Left-distributions are symmetrical. Note, bit shifting to
+the left by $e$ is equivalent to multiplying by $2^e$.}
+\label{figure:rewriting-arithop}
+\end{figure*}
+
+
+%\begin{figure*}[htbp!]
+
+%\begin{align*}
+%\proc{P-PlusR}:{\over
+%\p{e_1 \lp e_2 \lp \cdots \lp e_n} \lp e \rightarrow e_1 \lp e_2 \lp \cdots \lp e_n \lp e
+%}\p{n\geq 2}\\
+%\proc{P-PlusL}:{\over
+%e \lp \p{e_1 \lp e_2 \lp \cdots \lp e_n} \rightarrow e \lp e_1 \lp e_2 \lp \cdots \lp e_n
+%}\p{n\geq 2}
+%\end{align*}
+
+%\begin{align*}
+%\proc{P-TimesR}:{\over
+%\p{e_1 \lp e_2 \lp \cdots \lp e_n} \lt e \rightarrow e_1\lt e \lp e_2\lt e \lp
+%\cdots \lp e_n \lt e
+%}\p{n\geq 2}\\
+%\proc{P-TimesL}:{\over
+%e\lt\p{e_1 \lp e_2 \lp \cdots \lp e_n} \rightarrow e\lt e_1 \lp e\lt e_2 \lp \cdots
+%\lp e\lt e_n
+%}\p{n\geq 2}
+%\end{align*}
+
+%\begin{align*}
+%\proc{Minus}:{\over
+%e_1 \lm e_2 \rightarrow e_1 \lp \lneg e_2
+%}
+%\end{align*}
+
+%\begin{align*}
+%\proc{P-Negate}:{\over
+%\lneg\p{e_1 \lp e_2 \lp \cdots \lp e_n} \rightarrow \lneg e_1 \lp \lneg e_2 \lp \cdots
+%\lp \lneg e_n
+%}\p{n\geq 2}
+%\end{align*}
+
+
+%\caption[]{Rewriting rules for arithmetic operators.}
+%\label{figure:rewriting-arithop}
+%\end{figure*}
 
 
 \begin{figure*}[htbp!]
@@ -130,6 +183,48 @@ e \LOR \p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \rightarrow e \LOR e_1 \LOR e_2
 \end{figure*}
 
 For bitwise operators we simply use Light's associativity test. 
+
+For the \LMIN{} and \LMAX{} functions, the rewrite rules are a bit more
+complicated. First off, we need to do some extra work
+
+\begin{figure*}[htbp!]
+\begin{align*}
+\proc{S-Min}:{\over \LMIN\p{e_y, e_x} \rightarrow \LMIN\p{e_x,e_y} }
+\end{align*}
+
+\begin{align*}
+\proc{P-MinL}:{\over \LMIN\p{e_x, e_1 \cdots \LMIN\p{e_y, e_z} \cdots e_n}
+\rightarrow \LMIN \p{ \LMIN \p{ e_x, e_1 \cdots e_y \cdots e_n}, e_1 \cdots e_z
+\cdots e_n }
+}\p{n\geq 0}
+\end{align*}
+
+\caption[]{Rewriting rules for \texttt{min}. Rewrite rules for \texttt{max} are
+symmetrical. $e_x$, $e_y$, and $e_z$ represent expressions that contain a
+variable $x$, $y$, and $z$, respectively.  The sequences $\p{e_k}_{k=1}^n$ are
+independent of $e_x$, $e_y$, and $e_z$.} \label{figure:rewriting-logop}
+\end{figure*}
+
+\begin{table}
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Precedence} & \textbf{Operators} & \textbf{Fixity} \\ \hline
+1 & \texttt{not}, \tilde & None \\\hline
+2 & \texttt{pow} & Left \\\hline
+3 & \texttt{*}, \texttt{/}, \texttt{\%} & Left \\\hline
+4 & \texttt{+}, \texttt{-} & Left \\\hline
+5 & \texttt{<{}<{}}, \texttt{>{}>{}} & Left \\\hline
+6 & \texttt{<=}, \texttt{<}, \texttt{=} & None\footnotemark[2] \\\hline
+7 & \texttt{\&}, \texttt{\^}, \texttt{|} & Left \\\hline
+8 & \texttt{\&\&} & Left \\\hline
+9 & \texttt{||} & Left \\\hline
+10 & \texttt{if} & None \\\hline
+\end{tabular}
+\caption[]{The precedence and fixity of operators in L0. Lower precedence means
+stronger binding.}
+\label{table:precedence}
+\end{table}
 
 % \subsection{Generating variable constraints}
 
