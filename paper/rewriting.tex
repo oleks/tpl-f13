@@ -35,21 +35,67 @@ order, we can proceed freely.
 Another property that our rewriting rules must respect are overflows. We should
 keep in mind that we're dealing with modulo arithmetic.
 
-Unfolding all parens is straight-forward. Unparenthesise in a bottom-up
-fashion. An expression is represented as a tree, traverse the tree, identify
-all parentheses. Sort the parenetheses by depth in the tree. Take the
-parentheses in order. Apply parenthesing rewritings first.
+We now specify the setup of the algorithm:
 
-No need to unfold all parens, just all those that replace variables. Let x and
-y be the variable names of the arguments in question. Let z be variable name
-that does not occur in the program text of f. Let f1 be the original program
-text f. Let f2 be the original program text f with y replaced by z, and x
-replaced by (f1) (in that order). Let f3 be the original program text f with y
-replaced by z, and x replaced by y (in that order). Let f4 be the original
-program text f with y replaced by (f3). This leads to exactly 4 parentheses
-that we wish unfolded. To do this, we follow the P- rewriting rules.
+\begin{enumerate}
 
-We need to use a work queue. Mention precedance rules.
+\item Let $f(x,y)=e$.
+
+\item Let $z$ be a variable name that does not appear in $e$.
+
+\item Let $e_1$ be a copy of $e$.
+
+\item Let $e_2$ be a copy of $e$, where all occurrences of $y$ have been
+replaced by $z$, and all occurrences of $x$ have been replaced by the program
+text $\p{e_1}$ (in that order). Add all occurrences to $Q$.
+
+\item Let $e_3$ be a copy of $e$, where all occurrences of $y$ have been
+replaced by $z$, and all occurrences of $x$ have been replaced by $y$ (in that
+order).
+
+\item Let $e_4$ be a copy of $e$, where all occurrences of $y$ have been
+replaced by the program text $\p{e_3}$. Add all occurrences to $Q$.
+
+\item Use $Q$ to determine whether $e_2$ and $e_4$ are semantically equivalent.
+
+\end{enumerate}
+
+For instance, if $f(x,y)=x\lt c \lp y\lt c$:
+
+\begin{align*}
+e_1 &= x\lt c \lp y\lt c \\
+e_2 &= \underbrace{\p{x\lt c \lp y\lt c} \lt c}_{q_1} \lp z \lt c \\
+e_3 &= y\lt c \lp z \lt c \\
+e_4 &= x \lt c \lp \underbrace{\p{ y \lt c \lp z \lt c } \lt c}_{q_2} \\
+Q &= \seq{q_1, q_2 }
+\end{align*}
+
+$Q$ is a working queue which we will use to attempt to rewrite $e_2$ and $e_4$
+into syntactically equivalent program texts. We proceed to rewrite the
+subexpressions $q_1$ and $q_2$ by applying a rewrite rule. A rewrite rule will
+typically introduces new parentheses, which designate smaller subexpressions to
+be further rewritten.
+
+For instance, from the precedence rules in \referToTable{precedence} and
+\referToFigure{rewriting-arithop}, we see that for $q_1$ in the example above
+we apply the rule $\proc{P-Times-Plus-R}$. This rewrites $q_1$ into
+
+\[\underbrace{\p{x \lt c \lt c}}_{q_3} \lp \underbrace{\p{y \lt c \lt
+c}}_{q_4},\]
+
+where $q_3$ and $q_4$ get queued for rewriting. $q_3$ and $q_4$ both fall prey
+to the associative chaining property of multiplication.
+\referToFigure{rewriting-chaining} indicates that we rewrite such chains to be
+right-associative. If no rewrite rules match a subexpression on the queue, the
+subexpression is simply popped from the queue.
+
+The algorithm terminates if there are no circular rewrites. This can be checked
+by building a rewrite graph where the nodes are the rewrite rules. There is a
+directed edge from one rewrite rule to another if the rewrite leads to a
+program text rewritable by the other. If there are no cycles in this graph, the
+finite nature of syntax trees of finite programs makes the algorithm terminate.
+
+\subsection{Rewrite rules}
 
 The general algorithm: is the operator chain-associative? is the operator
 distributive over any other operators in L0?
@@ -76,8 +122,8 @@ operators, as such functions won't associate anyways.
 }\\
 \end{matrix}
 \]
-\caption[]{Rewriting rules for chainable operators.}
-\label{figure:rewriting-arithop}
+\caption[]{Rewriting rules for operators that are associative under chaining.}
+\label{figure:rewriting-chaining}
 \end{figure*}
 
 
@@ -85,6 +131,9 @@ operators, as such functions won't associate anyways.
 
 \[
 \begin{matrix}
+\proc{P-Plus-Minus-R}:{\over
+\p{e_1 \lm e_2}\lp e \rightarrow e_1 + \p{\lneg e2 \lp e}
+}\\
 \proc{P-Times-Mod-R}:{\over
 \p{e_1 \lmod e_2}\lt e \rightarrow \p{ e_1 \lt e } \lmod \p{ e_2 \lt e }
 }\\
@@ -96,7 +145,7 @@ operators, as such functions won't associate anyways.
 }\\
 \proc{P-Times-ShiftL-R}:{\over
 \p{e_1 \LBSL e_2}\lt e \rightarrow \p{ e_1 \lt e } \LBSL e_2
-}
+}\\
 \end{matrix}
 \]
 \caption[]{Rewriting rules for arithmetic operators. The above are only
@@ -147,40 +196,40 @@ the left by $e$ is equivalent to multiplying by $2^e$.}
 %\end{figure*}
 
 
-\begin{figure*}[htbp!]
-\begin{align*}
-\proc{P-AndR}:{\over
-\p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \LAND e \rightarrow e_1\LAND e \LOR
-e_2\LAND e \LOR \cdots \LOR e_n \LAND e
-}\p{n\geq 2}\\
-\proc{P-AndL}:{\over
-e\LAND\p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \rightarrow e\LAND e_1 \LOR e\LAND
-e_2 \LOR \cdots
-\LOR e\LAND e_n
-}\p{n\geq 2}
-\end{align*}
+%\begin{figure*}[htbp!]
+%\begin{align*}
+%\proc{P-AndR}:{\over
+%\p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \LAND e \rightarrow e_1\LAND e \LOR
+%e_2\LAND e \LOR \cdots \LOR e_n \LAND e
+%}\p{n\geq 2}\\
+%\proc{P-AndL}:{\over
+%e\LAND\p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \rightarrow e\LAND e_1 \LOR e\LAND
+%e_2 \LOR \cdots
+%\LOR e\LAND e_n
+%}\p{n\geq 2}
+%\end{align*}
 
-\begin{align*}
-\proc{P-OrR}:{\over
-\p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \LOR e \rightarrow e_1 \LOR e_2 \LOR
-\cdots \LOR e_n \LOR e
-}\p{n\geq 2}\\
-\proc{P-OrL}:{\over
-e \LOR \p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \rightarrow e \LOR e_1 \LOR e_2
-\LOR \cdots \LOR e_n
-}\p{n\geq 2}
-\end{align*}
+%\begin{align*}
+%\proc{P-OrR}:{\over
+%\p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \LOR e \rightarrow e_1 \LOR e_2 \LOR
+%\cdots \LOR e_n \LOR e
+%}\p{n\geq 2}\\
+%\proc{P-OrL}:{\over
+%e \LOR \p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \rightarrow e \LOR e_1 \LOR e_2
+%\LOR \cdots \LOR e_n
+%}\p{n\geq 2}
+%\end{align*}
 
-\begin{align*}
-\proc{P-Not}:{\over
-\LNOT\p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \rightarrow \LNOT e_1 \LOR \LNOT e_2
-\LOR \cdots \LOR \LNOT e_n
-}\p{n\geq 2}
-\end{align*}
+%\begin{align*}
+%\proc{P-Not}:{\over
+%\LNOT\p{e_1 \LOR e_2 \LOR \cdots \LOR e_n} \rightarrow \LNOT e_1 \LOR \LNOT e_2
+%\LOR \cdots \LOR \LNOT e_n
+%}\p{n\geq 2}
+%\end{align*}
 
-\caption[]{Rewriting rules for logical operators.}
-\label{figure:rewriting-logop}
-\end{figure*}
+%\caption[]{Rewriting rules for logical operators.}
+%\label{figure:rewriting-logop}
+%\end{figure*}
 
 For bitwise operators we simply use Light's associativity test. 
 
