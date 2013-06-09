@@ -154,18 +154,30 @@ e \lt \p{e_1\lt e_2} \rightarrow \p{e \lt e_1} \lt e_2
 \proc{P-Minus-L}:{\over
 e \lp \p{e_1 \lm e_2} \rightarrow \p{e \lp e_1 } \lm e_2
 }\\
+\proc{P-Min-L}:{\over
+e \lp \LMIN\p{e_1, e_2} \rightarrow \LMIN\p{\p{e \lp e_1}, \p{e \lp e_2}}
+}\quad
+\proc{P-Max-L}:{\over
+e \lp \LMAX\p{e_1, e_2} \rightarrow \LMAX\p{\p{e \lp e_1}, \p{e \lp e_2}}
+}\\
 \proc{T-Mod-L}:{\over
 e \lt \p{e_1 \lmod e_2}\rightarrow \p{ e \lt e_1 } \lmod \p{ e \lt e_2 }
-}\\
+}\quad
 \proc{T-Plus-L}:{\over
 e \lt \p{e_1 \lp e_2} \rightarrow \p{ e \lt e_1 } \lp \p{ e \lt e_2 }
 }\\
 \proc{T-Minus-L}:{\over
 e \lt \p{e_1 \lm e_2} \rightarrow \p{ e\lt e_1 } \lm \p{ e \lt e_2 }
-}\\
+}\quad
 \proc{T-ShiftL-L}:{\over
 e \lt \p{e_1 \LBSL e_2} \rightarrow \p{ e \lt e_1 } \LBSL e_2
-}
+}\\
+\proc{T-Min-L}:{\over
+e \lt \LMIN\p{e_1, e_2} \rightarrow \LMIN\p{\p{e \lt e_1}, \p{e \lt e_2}}
+}\quad
+\proc{T-Max-L}:{\over
+e \lt \LMAX\p{e_1, e_2} \rightarrow \LMAX\p{\p{e \lt e_1}, \p{e \lt e_2}}
+}\\
 \end{matrix}
 \]
 \caption[]{Rewriting rules for arithmetic operators. The above rules cover only
