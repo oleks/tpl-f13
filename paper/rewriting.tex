@@ -7,17 +7,17 @@ can test whether $\oplus$ is associative by considering whether $\p{x \oplus y}
 \oplus z$ and $x \oplus \p{y \oplus z}$ can be rewritten to be syntactically
 equivalent.
 
-For instance, if $\oplus\p{x,y} = x\lt c \lp y \lt c$, for some constant $c\in
+For instance, if $\oplus\p{x,y} = c \lt x \lp c \lt y$, for some constant $c\in
 S$, we consider whether the equality in \referToFigure{first-equality} holds
 for all $x$, $y$, and $z$.
 
 \begin{figure*}[htbp!]
 \begin{align*}
-\p{x\lt c \lp y\lt c}\lt c \lp z\lt c &= x\lt c \lp \p{y\lt c \lp z\lt c}\lt c \\
-x\lt c \lt c \lp y\lt c \lt c \lp z\lt c &= x\lt c \lp y\lt c \lt c \lp z\lt c \lt c \\
-x\lt c \lt c \lp z\lt c &= x\lt c \lp z\lt c \lt c
+c \lt \p{c\lt x \lp c\lt y} \lp c \lt z &= c\lt x \lp c \lt \p{c\lt y \lp c\lt z} \\
+c\lt c \lt x \lp c\lt c \lt y \lp c\lt z &= c\lt x \lp c\lt c \lt y \lp c\lt c \lt z \\
+c\lt c \lt x \lp c\lt z &= c\lt z \lp c\lt c \lt z
 \end{align*}
-\caption[]{If $\oplus\p{x,y}=x\lt c \lp y\lt c$ is associative, the above
+\caption[]{If $\oplus\p{x,y}=c\lt x \lp c\lt y$ is associative, the above
 should hold for all $x$, $y$ and $z$.}
 \label{figure:first-equality}
 \end{figure*}
@@ -33,9 +33,12 @@ on either side of the equality. So long as our rewriting rules respect this
 order, we can proceed freely. 
 
 Another property that our rewriting rules must respect are overflows. We should
-keep in mind that we're dealing with modulo arithmetic.
+keep in mind that we're dealing with modulo arithmetic. Rewriting should not
+change the evaluation of any expression with overflow.
 
-We now specify the setup of the algorithm:
+\subsection{Algorithm}
+
+We now specify the overall algorithm:
 
 \begin{enumerate}
 
@@ -63,25 +66,25 @@ replaced by the program text $\p{e_3}$. Add all occurrences to $Q$.
 For instance, if $f(x,y)=x\lt c \lp y\lt c$:
 
 \begin{align*}
-e_1 &= x\lt c \lp y\lt c \\
-e_2 &= \underbrace{\p{x\lt c \lp y\lt c} \lt c}_{q_1} \lp z \lt c \\
-e_3 &= y\lt c \lp z \lt c \\
-e_4 &= x \lt c \lp \underbrace{\p{ y \lt c \lp z \lt c } \lt c}_{q_2} \\
+e_1 &= c\lt x \lp c\lt y \\
+e_2 &= \underbrace{c \lt \p{c\lt x \lp c\lt y}}_{q_1} \lp c \lt z \\
+e_3 &= c\lt y \lp c \lt z \\
+e_4 &= c \lt x \lp \underbrace{c \lt \p{ c \lt y \lp c \lt z }}_{q_2} \\
 Q &= \seq{q_1, q_2 }
 \end{align*}
 
 $Q$ is a working queue which we will use to attempt to rewrite $e_2$ and $e_4$
 into syntactically equivalent program texts. We proceed to rewrite the
 subexpressions $q_1$ and $q_2$ by applying a rewrite rule. A rewrite rule will
-typically introduces new parentheses, which designate smaller subexpressions to
-be further rewritten.
+typically introduce new parentheses, which designate monotonically
+nonincreasing subexpressions to be rewritten next.
 
 For instance, from the precedence rules in \referToTable{precedence} and
 \referToFigure{rewriting-arithop}, we see that for $q_1$ in the example above
 we apply the rule $\proc{P-Times-Plus-R}$. This rewrites $q_1$ into
 
-\[\underbrace{\p{x \lt c \lt c}}_{q_3} \lp \underbrace{\p{y \lt c \lt
-c}}_{q_4},\]
+\[\underbrace{\p{c \lt c \lt x}}_{q_3} \lp \underbrace{\p{c \lt c \lt
+y}}_{q_4},\]
 
 where $q_3$ and $q_4$ get queued for rewriting. $q_3$ and $q_4$ both fall prey
 to the associative chaining property of multiplication.
@@ -90,12 +93,32 @@ right-associative. If no rewrite rules match a subexpression on the queue, the
 subexpression is simply popped from the queue.
 
 The algorithm terminates if there are no circular rewrites. This can be checked
-by building a rewrite graph where the nodes are the rewrite rules. There is a
-directed edge from one rewrite rule to another if the rewrite leads to a
-program text rewritable by the other. If there are no cycles in this graph, the
-finite nature of syntax trees of finite programs makes the algorithm terminate.
+by building a \emph{rewrite rule graph} where the nodes are the rewrite rules.
+There is a directed edge from one rewrite rule to another if the rewrite leads
+to a program text rewritable by the other. If there are no cycles in this
+graph, the finite nature of syntax trees of finite programs makes the algorithm
+terminate.
 
-\subsection{Rewrite rules}
+\subsection{Rules}
+
+The soundness of the algorithm depends on the soundness of the rewrite rules.
+The incompleteness of the method was proven in \referToSection{undecidability}. 
+
+In general, the rewrite rules are based on the observations made in
+\referToSection{chaining}, as well as the distributive laws of various
+operators.
+
+An operator $\otimes:S\times S\rightarrow S$ is distributive over
+$\oplus:S\times S \rightarrow S$ iff $x \otimes \p{ y \oplus z } = \p{x \otimes
+y} \oplus \p{x \otimes z}$(it is left-distributive) and $\p{y \oplus z} \otimes
+x = \p{y \otimes x} \oplus \p{z \otimes x}$(it is right-distributive).
+
+First and foremost there are the rewrite rules that follow directly from
+\referToSection{chaining}. We specify only their left-associative parts because
+otherwise this would lead to cycles in the rewrite rule graph. We chose to
+rewrite all chains into left-associative chains as most operators in L0 are
+left-associative. We hypothesise this will make the recursion bottom out faster
+in practice.
 
 The general algorithm: is the operator chain-associative? is the operator
 distributive over any other operators in L0?
@@ -110,47 +133,58 @@ precedence of the language. We add an additional rule to transform chains.
 We don't need to define rules for expanding parentheses over non-assoc
 operators, as such functions won't associate anyways.
 
-\begin{figure*}[htbp!]
-
+\begin{figure}[htbp!]
 \[
 \begin{matrix}
 \proc{P-Plus-Plus}:{\over
-\p{e_1 \lp e_2}\lp e \rightarrow e_1 \lp \p{ e_2 \lp e }
+e \lp \p{e_1 \lp e_2} \rightarrow \p{ e \lp e_1} \lp e_2
 }\\
 \proc{P-Times-Times}:{\over
-\p{e_1\lt e_2}\lt e \rightarrow e_1 \lt \p{ e_2 \lt e }
+e \lt \p{e_1\lt e_2} \rightarrow \p{e \lt e_1} \lt e_2
 }\\
 \end{matrix}
 \]
 \caption[]{Rewriting rules for operators that are associative under chaining.}
 \label{figure:rewriting-chaining}
-\end{figure*}
-
+\end{figure}
 
 \begin{figure*}[htbp!]
-
 \[
 \begin{matrix}
-\proc{P-Plus-Minus-R}:{\over
-\p{e_1 \lm e_2}\lp e \rightarrow e_1 + \p{\lneg e2 \lp e}
+\proc{P-Minus-L}:{\over
+e \lp \p{e_1 \lm e_2} \rightarrow \p{e \lp e_1 } \lm e_2
 }\\
-\proc{P-Times-Mod-R}:{\over
-\p{e_1 \lmod e_2}\lt e \rightarrow \p{ e_1 \lt e } \lmod \p{ e_2 \lt e }
+\proc{T-Mod-L}:{\over
+e \lt \p{e_1 \lmod e_2}\rightarrow \p{ e \lt e_1 } \lmod \p{ e \lt e_2 }
 }\\
-\proc{P-Times-Plus-R}:{\over
-\p{e_1 \lp e_2}\lt e \rightarrow \p{ e_1 \lt e } \lp \p{ e_2 \lt e }
+\proc{T-Plus-L}:{\over
+e \lt \p{e_1 \lp e_2} \rightarrow \p{ e \lt e_1 } \lp \p{ e \lt e_2 }
 }\\
-\proc{P-Times-Minus-R}:{\over
-\p{e_1 \lm e_2}\lt e \rightarrow \p{ e_1 \lt e } \lp \lneg\p{ e_2 \lt e }
+\proc{T-Minus-L}:{\over
+e \lt \p{e_1 \lm e_2} \rightarrow \p{ e\lt e_1 } \lm \p{ e \lt e_2 }
 }\\
-\proc{P-Times-ShiftL-R}:{\over
-\p{e_1 \LBSL e_2}\lt e \rightarrow \p{ e_1 \lt e } \LBSL e_2
+\proc{T-ShiftL-L}:{\over
+e \lt \p{e_1 \LBSL e_2} \rightarrow \p{ e \lt e_1 } \LBSL e_2
+}
+\end{matrix}
+\]
+\caption[]{Rewriting rules for arithmetic operators. The above rules cover only
+left-distributive laws. Right-distributive laws have symmetrical rewrite rules.
+Note, bit shifting to the left by $e$ is equivalent to multiplying by $2^e$.}
+\label{figure:rewriting-arithop}
+\end{figure*}
+
+\begin{figure*}[htbp!]
+\[
+\begin{matrix}
+\proc{If-L}:{\over
+e \circ \p{\mathtt{if}\ c\ \mathtt{then}\ e_1\ \mathtt{else}\ e_2} \rightarrow
+\mathtt{if}\ c\ \mathtt{then}\ \p{e \circ e_1} \ \mathtt{else}\ \p{e \circ e_2}
 }\\
 \end{matrix}
 \]
-\caption[]{Rewriting rules for arithmetic operators. The above are only
-right-distributions. Left-distributions are symmetrical. Note, bit shifting to
-the left by $e$ is equivalent to multiplying by $2^e$.}
+\caption[]{Rewriting rules for \texttt{if}-\texttt{then}-\texttt{else}
+expressions. $\circ$ is any operator in L0.}
 \label{figure:rewriting-arithop}
 \end{figure*}
 
@@ -236,23 +270,23 @@ For bitwise operators we simply use Light's associativity test.
 For the \LMIN{} and \LMAX{} functions, the rewrite rules are a bit more
 complicated. First off, we need to do some extra work
 
-\begin{figure*}[htbp!]
-\begin{align*}
-\proc{S-Min}:{\over \LMIN\p{e_y, e_x} \rightarrow \LMIN\p{e_x,e_y} }
-\end{align*}
+%\begin{figure*}[htbp!]
+%\begin{align*}
+%\proc{S-Min}:{\over \LMIN\p{e_y, e_x} \rightarrow \LMIN\p{e_x,e_y} }
+%\end{align*}
 
-\begin{align*}
-\proc{P-MinL}:{\over \LMIN\p{e_x, e_1 \cdots \LMIN\p{e_y, e_z} \cdots e_n}
-\rightarrow \LMIN \p{ \LMIN \p{ e_x, e_1 \cdots e_y \cdots e_n}, e_1 \cdots e_z
-\cdots e_n }
-}\p{n\geq 0}
-\end{align*}
+%\begin{align*}
+%\proc{P-MinL}:{\over \LMIN\p{e_x, e_1 \cdots \LMIN\p{e_y, e_z} \cdots e_n}
+%\rightarrow \LMIN \p{ \LMIN \p{ e_x, e_1 \cdots e_y \cdots e_n}, e_1 \cdots e_z
+%\cdots e_n }
+%}\p{n\geq 0}
+%\end{align*}
 
-\caption[]{Rewriting rules for \texttt{min}. Rewrite rules for \texttt{max} are
-symmetrical. $e_x$, $e_y$, and $e_z$ represent expressions that contain a
-variable $x$, $y$, and $z$, respectively.  The sequences $\p{e_k}_{k=1}^n$ are
-independent of $e_x$, $e_y$, and $e_z$.} \label{figure:rewriting-logop}
-\end{figure*}
+%\caption[]{Rewriting rules for \texttt{min}. Rewrite rules for \texttt{max} are
+%symmetrical. $e_x$, $e_y$, and $e_z$ represent expressions that contain a
+%variable $x$, $y$, and $z$, respectively.  The sequences $\p{e_k}_{k=1}^n$ are
+%independent of $e_x$, $e_y$, and $e_z$.} \label{figure:rewriting-logop}
+%\end{figure*}
 
 \begin{table}
 \centering
