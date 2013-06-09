@@ -4,19 +4,19 @@ Light's associativity test is an algorithm for testing if a binary operator defi
 finite set is associative. The idea is to take an element $a$ from the set $S$ with binary
 operator $\cdot$ and define two binary operations, $\circ$ and $*$ (see below), construct
 their Caley tables, and check if they are the same. It is sufficient to check a proper
-generating subset of S\cite{light}.
+generating subset of S\cite{light}. 
 
 \begin{align*}
-    x \circ y   &= (x \cdot a) \cdot y \\
-    x * y       &= x \cdot (a \cdot y) 
+x \circ_{a} y   &= (x \cdot a) \cdot y \\
+x *_{a} y       &= x \cdot (a \cdot y) 
 \end{align*}
 
-For binary operations only four Caley tables of size $2\times2$ are needed. For example, we
-can check the associativity of the operator $x \oplus y = x \XOR  y \mid x \XOR y$:
+For bitwise operations only four Caley tables of size $2\times2$ are needed. As an
+example, we check the associativity of the operator $x \oplus y = x \XOR y \mid x \XOR y$:
 
 \makeTable
 {assoc-array-combinators}
-{Cayley table for the example operator}
+{Cayley table for the example operator.}
 {|c|c|c|}
 {$\oplus$ & $0$ & $1$}
 {
@@ -24,28 +24,75 @@ can check the associativity of the operator $x \oplus y = x \XOR  y \mid x \XOR 
     $1$ & $1$ & $0$
 }
 
-Because $\{0\}$ is a proper generating subset of $\{0, 1\}$, it suffices to create the following two tables:
+Because $\{0\}$ is a proper generating subset of $\{0, 1\}$, it suffices to create the
+following two tables:
 
 \begin{table}[h!]
-  \begin{tabular}{|c|c|c|}
+  \def\arraystretch{1.2}
+  \begin{tabular}{|c|cc|}
     \hline
-      $\circ$ & 0 & 1\\
+      $\circ_{0}$ & $0$ & $1$\\
     \hline
-      0 & 0 & 1 \\
-      1 & 1 & 0 \\
+      $0$ & $0$ & $1$ \\
+      $1$ & $1$ & $0$ \\
     \hline
   \end{tabular}
 \quad
-  \begin{tabular}{|c|c|c|}
+  \begin{tabular}{|c|cc|}
     \hline
-      $*$ & 0 & 1\\
+      $*_{0}$ & $0$ & $1$\\
     \hline
-      0 & 0 & 1 \\
-      1 & 1 & 0 \\
+      $0$ & $0$ & $1$ \\
+      $1$ & $1$ & $0$ \\
     \hline
   \end{tabular}
   \centering
-  \caption{Caley tables for $0$}
+  \caption{Light's associativity test, showing $\oplus$ is associative.}
+\end{table}
+
+%This method can be extended to accommodate both bitwise operators as well as addition and
+%subtraction by extending the tables with a carry-out value. The following example shows
+%that $x \oplus y = x - y \mid x$ is not associative:
+
+Because calculations are done on fixed size integers, you could in principle use Light's
+associativity test to completely determine associativity. This would, however, be
+intractable for practical purposes - for 32bit integers, this would require at least
+$2^{32^{2}}$ evaluations of the expression in order to fill a single Caley table, which
+would need to be done numerous times.
+
+The technique can be made tractable by turning it into a heuristic which cannot guarantee
+that the operator is associative, but instead tries to find a counterexample which proves
+that it is not associative. This can be done by taking a sample of random values from the
+given integer range and constructing a partial Caley table, which is then used by Light's
+test. This approach is inspired by \cite{quickcheck} and similar property-based
+testing tools.
+
+As an example, two of the Caley tables for the test of the operator $\texttt{max}(x - y, x \XOR y)$
+with 3 randomly generated values in the range $-100$ to $100$ is given below:
+
+\begin{table}[h!]
+  \def\arraystretch{1.2}
+  \begin{tabular}{|c|ccc|}
+    \hline
+    $\circ_{-24}$ & $-44$ & $-24$ & $82$ \\
+    \hline
+        $-44$ & $104$ & $84$  & $110$ \\ 
+        $-24$ & $44$  & $24$  & $82$  \\
+        $82$  & $150$ & $130$ & $56$  \\
+    \hline
+  \end{tabular}
+\quad
+  \begin{tabular}{|c|ccc|}
+    \hline
+    $*_{-24}$ & $-44$ & $-24$ & $82$ \\
+    \hline
+        $-44$ & $-24$ & $-44$  & $110$ \\ 
+        $-24$ & $-44$  & $-24$  & $82$  \\
+        $82$  & $110$ & $82$ & $152$  \\
+    \hline
+  \end{tabular}
+  \centering
+  \caption{Example test of a binary operator which shows that it is not associative.}
 \end{table}
 
 
