@@ -90,16 +90,12 @@ right-associative. If no rewrite rules match a subexpression on the queue, the
 subexpression is simply popped from the queue.
 
 The algorithm terminates if there are no circular rewrites. This can be checked
-by building a rewrite graph where the nodes are the rewrite rules and there is
-a directed edge between a rule $R_1$ and a rule $R_2$ iff $R_1$ rewrites the
-program text into something that $R_2$ can rewrite. If there are no cycles in
-this graph, the finite nature of syntax trees of finite programs makes the
-algorithm terminate.
+by building a rewrite graph where the nodes are the rewrite rules. There is a
+directed edge from one rewrite rule to another if the rewrite leads to a
+program text rewritable by the other. If there are no cycles in this graph, the
+finite nature of syntax trees of finite programs makes the algorithm terminate.
 
-% Unfolding all parens is straight-forward. Unparenthesise in a bottom-up
-% fashion. An expression is represented as a tree, traverse the tree, identify
-% all parentheses. Sort the parenetheses by depth in the tree. Take the
-% parentheses in order. Apply parenthesing rewritings first.
+\subsection{Rewrite rules}
 
 The general algorithm: is the operator chain-associative? is the operator
 distributive over any other operators in L0?
