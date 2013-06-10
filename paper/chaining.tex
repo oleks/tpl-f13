@@ -13,7 +13,7 @@ Note that even though the binary functions in L0 we are interested in work on ar
 will mostly focus on the associativity of binary operators working on single values, and
 thus the examples in the text will predominantly be integer based.
 
-\subsubsection{Arithmetic operators}
+\subsection{Arithmetic operators}
 
 L0 has a range of binary arithmetic operators, namely \texttt{+}, \texttt{*},
 \texttt{-}, \texttt{/}, \texttt{\%}, \texttt{pow}, and \tilde, where the last
@@ -42,7 +42,7 @@ Our observations are summarized in \referToTable{assoc-chaining-arithop}.
   \tilde       & yes\footnotemark[1]
 }
 
-\subsubsection{Relational operators}
+\subsection{Relational operators}
 
 L0 has a couple binary relational operators, namely \texttt{<=}, \texttt{<}, and
 \texttt{=}, having the obvious semantics. The operators are defined on
@@ -52,7 +52,7 @@ of type \boolt{}.
 Relational operators are not chainable in L0. These operators are only
 interesting in combination with other operators.\footnotemark[2]
 
-\subsubsection{Logical operators}
+\subsection{Logical operators}
 
 L0 has a couple logical operators, namely \texttt{\&\&}, \texttt{||}, and
 \texttt{not}, where the last is a unary negation operator. The operators are
@@ -77,7 +77,7 @@ Our observations are summarized in \referToTable{assoc-chaining-logop}.
 \texttt{<=}, \texttt{<}, and \texttt{=} are now arithemtic operators, all
 left-fixed, and returning integral values.}
 
-\subsubsection{Bitwise operators}
+\subsection{Bitwise operators}
 
 L0 has a range of bitwise operators, namely \texttt{\^}, \texttt{\&},
 \texttt{|}, \texttt{>{}>}, and \texttt{<{}<}, having semantics as in C. The
@@ -99,7 +99,7 @@ Our observations are summarized in \referToTable{assoc-chaining-bitop}.
   \texttt{<{}<} & yes
 }
 
-\subsubsection{Other functions}
+\subsection{Other functions}
 
 L0 has a range of other builtins, e.g. various second-order array combinators.
 Of particular interest to us are the functions \texttt{concat}, \texttt{min},

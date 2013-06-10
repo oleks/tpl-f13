@@ -1,4 +1,4 @@
-\section{Introduction}
+\section{Introduction}\label{section:introduction}
 
 An infix operator $\oplus:S\times S\rightarrow S$ is associative iff.
 \[\forall\ x,y,z\in S\ .\ \p{x \oplus y} \oplus z = x \oplus \p{y \oplus z}.\]
@@ -52,52 +52,5 @@ clearly preferable, especially for scientific computing languages such as L0,
 since such a bug can be very hard to find (the user might not be aware that
 associativity is a requirement at all).
 
-\subsection{Undecidability}\label{section:undecidability}
+TODO: summarise the sections below.
 
-Undecidability of the property is proven similar to the halting problem.
-
-\begin{proof} We construct a binary Turing machine (TM) $M$ that takes as input
-a pair of values $x,y\in S$.
-
-Assume there exists a TM $A$, that given an binary TM $M$, accepts if $M$ is
-associative, and rejects otherwise. That is, $A$ is a decider for the
-associativity problem.
-
-We construct $M$ such that it returns $x$ if $A(M)$ accepts, and a constant
-$z\in S$ otherwise:
-
-\[M\p{x,y} = \left\{ \begin{array}{l l} x & \text{if $A(M)$} \\ z &
-\text{otherwise} \end{array} \right.\]
-
-If $A(M)$ accepts, $M$ is not associative, if $A(M)$ rejects, $M$ is
-associative, which contradicts our assumptions about $A$. \end{proof}
-
-\subsection{The associative type}
-
-For ease of analysis, we introduce the concept of the \emph{associative type}
---- a function type that unifies with the type of any associative function. We
-identify this type from the following observation: an associative function
-consumes at least two values of some type $S$, and returns a value of type $S$.
-
-We define it formally as follows:
-
-\[\oplus:S \boxtimes S \boxtimes T_1 \boxtimes T_2 \boxtimes \cdots \boxtimes
-T_n \rightarrow S, \]
-
-where
-
-\begin{itemize}
-
-\item $\p{T_k}_{k=1}^n$ for $n\geq 0$ is a sequence of arbitrary types.
-
-\item $\boxtimes$ is the commutative equivalent of the regular $\times$, i.e.
-the arguments to $\oplus$ can be rearranged under unification.
-
-\end{itemize}
-
-For example, the following types unify with the associative type: $f:S \times S
-\times S \rightarrow S$, $g:S \times S \times \mathcal{Z} \rightarrow S$, $h:S
-\times \mathcal{Z} \times S \rightarrow S$, etc.
-
-A function with a type that unifies with the associative type is not
-necessarily associative, but a function that doesn't definitely is not.

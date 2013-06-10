@@ -1,10 +1,13 @@
 \newcommand{\XOR}{\mathbin{^\wedge}}
-\section{Light's associativity test}
-Light's associativity test is an algorithm for testing if a binary operator defined in a
-finite set is associative. The idea is to take an element $a$ from the set $S$ with binary
-operator $\cdot$ and define two binary operations, $\circ$ and $*$ (see below), construct
-their Caley tables, and check if they are the same. It is sufficient to check a proper
-generating subset of S\cite{light}. 
+
+\section{Light's associativity test}\label{section:lights-test}
+
+Light's associativity test is an algorithm for testing if a binary operator
+defined in a finite set is associative. The idea is to take an element $a$ from
+the set $S$ with binary operator $\cdot$ and define two binary operations,
+$\circ$ and $*$ (see below), construct their Caley tables, and check if they
+are the same. It is sufficient to check a proper generating subset of
+S\cite{light}. 
 
 \begin{align*}
 x \circ_{a} y   &= (x \cdot a) \cdot y \\

@@ -1,6 +1,6 @@
 % L0 is a pure language
 
-\section{Rewriting}
+\section{Rewriting}\label{section:rewriting}
 
 The straight-forward way of testing associativity is by \emph{rewriting}. We
 can test whether $\oplus$ is associative by considering whether $\p{x \oplus y}
@@ -120,18 +120,23 @@ rewrite all chains into left-associative chains as most operators in L0 are
 left-associative. We hypothesise this will make the recursion bottom out faster
 in practice.
 
-The general algorithm: is the operator chain-associative? is the operator
-distributive over any other operators in L0?
+To construct the rules we proceed as follows: for every operator $\otimes$,
+consider every other operator $\oplus$, as to whether $\otimes$ is distributive
+over $\oplus$. We summarise our results for the arithmetic, logical, and
+bitwise operators in \referToFigure{rewriting}.
 
-We summarise the rules for arithmetic operators in
-\referToFigure{rewriting-arithop}. The approach to constructing the rules in
-general is to consider every operator $\oplus$, associative under chaining. For
-each $\oplus$ we consider whether the $\oplus$ is distributive under every
-$\otimes$. This will allow us to apply the rules by following the rules of
-precedence of the language. We add an additional rule to transform chains.
+Similar rules can be written for \texttt{min}, \texttt{max}, and
+\texttt{if-then-else}. \texttt{concat} however does not distribute over any of
+the operators.
 
-We don't need to define rules for expanding parentheses over non-assoc
-operators, as such functions won't associate anyways.
+%For \LMIN{} and \LMAX{} the situation is a little more complicated (\LCONCAT{}
+%is not distributtive over any of th other operators covered in
+%\referToSection{chaining}. We have not come up with any sufficiently general
+%rewrite rule. We have come up with one rule presented in
+%\referToFigure{rewriting-min-max}.
+
+We do not claim that this list of rewrite rules is complete in any way. Our
+approach allows for rules to be added once they are discovered.
 
 \begin{figure}[htbp!]
 \[
@@ -148,7 +153,7 @@ e \lt \p{e_1\lt e_2} \rightarrow \p{e \lt e_1} \lt e_2
 \label{figure:rewriting-chaining}
 \end{figure}
 
-\begin{figure*}[htbp!]
+\begin{figure}[htbp!]
 \[
 \begin{matrix}
 \proc{P-Minus-L}:{\over
@@ -156,49 +161,57 @@ e \lp \p{e_1 \lm e_2} \rightarrow \p{e \lp e_1 } \lm e_2
 }\\
 \proc{P-Min-L}:{\over
 e \lp \LMIN\p{e_1, e_2} \rightarrow \LMIN\p{\p{e \lp e_1}, \p{e \lp e_2}}
-}\quad
+}\\
 \proc{P-Max-L}:{\over
 e \lp \LMAX\p{e_1, e_2} \rightarrow \LMAX\p{\p{e \lp e_1}, \p{e \lp e_2}}
 }\\
 \proc{T-Mod-L}:{\over
 e \lt \p{e_1 \lmod e_2}\rightarrow \p{ e \lt e_1 } \lmod \p{ e \lt e_2 }
-}\quad
+}\\
 \proc{T-Plus-L}:{\over
 e \lt \p{e_1 \lp e_2} \rightarrow \p{ e \lt e_1 } \lp \p{ e \lt e_2 }
 }\\
 \proc{T-Minus-L}:{\over
 e \lt \p{e_1 \lm e_2} \rightarrow \p{ e\lt e_1 } \lm \p{ e \lt e_2 }
-}\quad
+}\\
 \proc{T-ShiftL-L}:{\over
 e \lt \p{e_1 \LBSL e_2} \rightarrow \p{ e \lt e_1 } \LBSL e_2
 }\\
 \proc{T-Min-L}:{\over
 e \lt \LMIN\p{e_1, e_2} \rightarrow \LMIN\p{\p{e \lt e_1}, \p{e \lt e_2}}
-}\quad
+}\\
 \proc{T-Max-L}:{\over
 e \lt \LMAX\p{e_1, e_2} \rightarrow \LMAX\p{\p{e \lt e_1}, \p{e \lt e_2}}
 }\\
-\end{matrix}
-\]
-\caption[]{Rewriting rules for arithmetic operators. The above rules cover only
-left-distributive laws. Right-distributive laws have symmetrical rewrite rules.
-Note, bit shifting to the left by $e$ is equivalent to multiplying by $2^e$.}
-\label{figure:rewriting-arithop}
-\end{figure*}
-
-\begin{figure*}[htbp!]
-\[
-\begin{matrix}
-\proc{If-L}:{\over
-e \circ \p{\mathtt{if}\ c\ \mathtt{then}\ e_1\ \mathtt{else}\ e_2} \rightarrow
-\mathtt{if}\ c\ \mathtt{then}\ \p{e \circ e_1} \ \mathtt{else}\ \p{e \circ e_2}
+\proc{A-Or-L}:{\over
+e \LAND \p{e_1 \LOR e_2}\rightarrow \p{ e \LAND e_1 } \LOR \p{ e \LAND e_2 }
+}\\
+\proc{BA-BOr-L}:{\over
+e \LBAND \p{e_1 \LBOR e_2}\rightarrow \p{ e \LBAND e_1 } \LBOR \p{ e \LBAND e_2
+}
 }\\
 \end{matrix}
 \]
-\caption[]{Rewriting rules for \texttt{if}-\texttt{then}-\texttt{else}
-expressions. $\circ$ is any operator in L0.}
-\label{figure:rewriting-arithop}
-\end{figure*}
+\caption[]{Rewriting rules for arithmetic logical and bitwise operators. The
+above rules cover only left-distributive laws. Right-distributive laws have
+symmetrical rewrite rules.  Note, bit shifting to the left by $e$ is equivalent
+to multiplying by $2^e$.}
+\label{figure:rewriting}
+\end{figure}
+
+%\begin{figure*}[htbp!]
+%\[
+%\begin{matrix}
+%\proc{If-L}:{\over
+%e \circ \p{\mathtt{if}\ c\ \mathtt{then}\ e_1\ \mathtt{else}\ e_2} \rightarrow
+%\mathtt{if}\ c\ \mathtt{then}\ \p{e \circ e_1} \ \mathtt{else}\ \p{e \circ e_2}
+%}\\
+%\end{matrix}
+%\]
+%\caption[]{Rewriting rules for \texttt{if}-\texttt{then}-\texttt{else}
+%expressions. $\circ$ is any operator in L0.}
+%\label{figure:rewriting-arithop}
+%\end{figure*}
 
 
 %\begin{figure*}[htbp!]
@@ -277,11 +290,6 @@ expressions. $\circ$ is any operator in L0.}
 %\label{figure:rewriting-logop}
 %\end{figure*}
 
-For bitwise operators we simply use Light's associativity test. 
-
-For the \LMIN{} and \LMAX{} functions, the rewrite rules are a bit more
-complicated. First off, we need to do some extra work
-
 %\begin{figure*}[htbp!]
 %\begin{align*}
 %\proc{S-Min}:{\over \LMIN\p{e_y, e_x} \rightarrow \LMIN\p{e_x,e_y} }
@@ -321,26 +329,24 @@ stronger binding.}
 \label{table:precedence}
 \end{table}
 
-% \subsection{Generating variable constraints}
+\subsection{Generating variable constraints}
 
-% If instead, $\oplus\p{x,y,c} = x\lt c \lp y \lt c$, and we would like to know
-% whether $\oplus$ is associative wrt. $x$ and $y$, we reach no useful
-% conclusion. We can find out whether there exists a $c$ for which this
-% property holds:
+If instead, $\oplus\p{x,y,c} = c\lt x \lp c \lt y$, and we would like to know
+whether $\oplus$ is associative wrt. $x$ and $y$, we reach no useful conclusion
+with the above method. We can find out whether there exists a $c$ for which
+this property holds:
 
-% \begin{align*}
-% x \lt c^2 \lp z \lt c &= x \lt c \lp z \lt c^2 \\
-% x \lt c \lp z &= x \lp z \lt c \\
-% x \lt c - z \lt c &= x - z \\
-% c (x-z) &= x-z \\
-% c &= {x-z\over x-z} \\
-% c &= 1
-% \end{align*}
+\begin{align*}
+c \lt c \lt x \lp c \lt z &= c \lt x \lp c \lt c \lt z \\
+c \lt x \lp z &= x \lp c \lt z \\
+c \lt x \lm c \lt z &= x \lm z \\
+c \lt \p{x \lm z} &= x \lm z \\
+c &= \p{x \lm z} \ld  \p{x \lm z} \\
+c &= 1
+\end{align*}
 
-% The compiler should at this point suggest that $c$ be replaced by a constant
-% if the function is to be associative. Such an analysis may not reveal a
-% constant, 
+The compiler should at this point suggest that $c$ be replaced by a constant if
+the function is to be associative. Such an analysis may not reveal a constant,
+but instead a range or a set of possible values. Solving arbitrary algebraic
+expressions is beyond the scope of this paper. 
 
-% This implies that $\oplus$ is associative for all $x$, $y$, and $z$ only if
-% $\card{c}=1$. Of course, if $c$ is a constant, it is known to us, and the
-% equality conclusion can be reached directly without solving for $c$.
