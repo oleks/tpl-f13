@@ -1,0 +1,20 @@
+\section{Undecidability}\label{section:undecidability}
+
+Undecidability of the property is proven similar to the halting problem.
+
+\begin{proof} We construct a binary Turing machine (TM) $M$ that takes as input
+a pair of values $x,y\in S$.
+
+Assume there exists a TM $A$, that given an binary TM $M$, accepts if $M$ is
+associative, and rejects otherwise. That is, $A$ is a decider for the
+associativity problem.
+
+We construct $M$ such that it returns $x$ if $A(M)$ accepts, and a constant
+$z\in S$ otherwise:
+
+\[M\p{x,y} = \left\{ \begin{array}{l l} x & \text{if $A(M)$} \\ z &
+\text{otherwise} \end{array} \right.\]
+
+If $A(M)$ accepts, $M$ is not associative, if $A(M)$ rejects, $M$ is
+associative, which contradicts our assumptions about $A$. \end{proof}
+
