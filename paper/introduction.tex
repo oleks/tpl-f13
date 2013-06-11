@@ -52,5 +52,21 @@ clearly preferable, especially for scientific computing languages such as L0,
 since such a bug can be very hard to find (the user might not be aware that
 associativity is a requirement at all).
 
-TODO: summarise the sections below.
+L0 is an eagerly evaluated, purely functional, second order programming
+language. The language encourages the use of arrays and built-in second-order
+array combinators for all practical problems. L0 is intended for use as an
+intermediate language, and has a focus on efficient execution on vector
+hardware.
+
+Section 2 provides a proof of the undecidability of the associative property.
+Section 3 defines the associative type, expanding the definition of
+associativity in general. Section 4 covers the built-in operators in L0, and
+whether each of them is associative under chaining. Section 5 covers Light's
+associativity test which allows testing the associativity of functions built
+solely from bitwise operators. Section 5 also suggests using a light-weight
+Light's associativity test in a manner known as property-based testing. This
+technique works for arbitrary functions. Section 6 covers a more
+straight-forward approach, based on rewriting. Section 7 describes the overall
+algorithm we suggest. Section 8 discusses possible future work. Section 9
+concludes the paper.
 
