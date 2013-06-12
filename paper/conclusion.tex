@@ -3,7 +3,14 @@
 The undecidability of the associative property puts a bound on it's
 theoretical, but not necessarily practical feasibility.
 
+We have looked into mutliple methods for deciding associativity. Only one of
+these methods is applicable to L0 programs in general. The cost is loss of
+soundness, i.e. functions may be deemed associative when they in fact ar not.
+Other methods are sound, but constrained to a rather mundane subset of the L0
+arithmetic, logical, and bitwise operators. These methods also do not in
+general allow for the function in question to use other user-defined functions,
+unless these functions can be efficiently inlined.
+
 The techniques presented in this paper are by no means constrained to L0. They
 are aplicable to all languages with similar semantics.
 
-TODO
