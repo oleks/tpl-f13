@@ -19,7 +19,11 @@ $x,y,z,c\in \set{0,1}$:
 
 Light's associativity can be applied here by first letting $c=0$ and then
 letting $c=1$. If $f$ turns out to be associative in both these cases, we can
-say that $f$ is associative in general.
+say that $f$ is associative in general. 
+
+Problems arise with more than one addition in a single expression, as this requires more
+than a single bit for the carry bit, but which might be solvable by expanding the Caley
+tables to include the combined carry as an integer.
 
 This approach requires time linear in the number of carry-based operations in
 the function body, i.e. there is an independent carry bit for each such
@@ -31,7 +35,7 @@ $x\lp y=x \lp(\lneg y)$. Other operators however, get more tricky as we have to
 keep more than a single carry bit in mind when doing e.g. multiplication,
 division, raising to various powers, or bit shifting.
 
-Another possible direction of future work is expading the set of rewriting
+Another possible direction of future work is expanding the set of rewriting
 rules. Especially useful would be generalised rules about \texttt{min},
 \texttt{max}, and \texttt{if-then-else}.
 

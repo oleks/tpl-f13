@@ -4,13 +4,16 @@ needs to be combined such that each method handles the domains where it works. I
 section we will breifly discuss the advantages and drawbacks of each method and in which
 cases we believe they should be used.
 
-Note that since none of our methods currently have a practical implementation we cannot
-say anything about the effectiveness of the different methods in practice.
+Note that since none of our methods are currently implemented, we cannot say anything
+about their effectiveness contra the complexity of implementing the different methods
+in practice. A subset of the methods might be so effective in practice that the others
+are not worth implementing, and some might be too computationally expensive for large
+functions, for example.
 
 The simple examples can be decided completely, either by the chaining tables, or, if the
 expressions consist of combinations of bitwise operators, by Light's associativity test.
-Since the binary operators work on arrays, for arrays of known length it is possible to
-decide associativity on an per index basis - for example, these methods could determine
+Since the binary operators work on arrays, for some arrays of known length it is possible
+to decide associativity on an per index basis - for example, these methods could determine
 that index 1, 2, and 4 were associative for certain, while they couldn't say anything
 about index 3.
 
@@ -19,7 +22,7 @@ be handled by the rewrite algorithms described in Section \ref{section:rewriting
 method is sound, and returns either that the expression is associative or that it cannot
 decide.
 
-If none of the other methods have returned with certainty or been applicable, Light's test
-can be applied as described at the end of Section \ref{section:lights-test}. It cannot
-decide if the expression is associative, but instead tries to disprove it by taking random
-values from the functions input type. 
+If none of the other methods have returned with certainty or been applicable, Light's
+test can be applied as described at the end of Section \ref{section:lights-test}. It
+cannot decide if the expression is associative, but instead tries to disprove it by taking
+random values from the functions input type.
