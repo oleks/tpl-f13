@@ -7,18 +7,24 @@ can test whether $\oplus$ is associative by considering whether $\p{x \oplus y}
 \oplus z$ and $x \oplus \p{y \oplus z}$ can be rewritten to be syntactically
 equivalent.
 
-For instance, if $\oplus\p{x,y} = c \lt x \lp c \lt y$, for some constant $c\in
-S$, we consider whether the equality in \referToFigure{first-equality} holds
-for all $x$, $y$, and $z$.
+For instance, if $\oplus\p{x,y} = \p{c \lt x} \lp \p{c \lt y}$, for some
+constant $c\in S$, we consider whether the equality in
+\referToFigure{first-equality} holds for all $x$, $y$, and $z$.
 
 \begin{figure*}[htbp!]
 \begin{align*}
-c \lt \p{c\lt x \lp c\lt y} \lp c \lt z &= c\lt x \lp c \lt \p{c\lt y \lp c\lt z} \\
-c\lt c \lt x \lp c\lt c \lt y \lp c\lt z &= c\lt x \lp c\lt c \lt y \lp c\lt c \lt z \\
-c\lt c \lt x \lp c\lt z &= c\lt z \lp c\lt c \lt z
+\p{c \lt \p{\p{c\lt x} \lp \p{c\lt y}}} \lp \p{c \lt z} &= \p{c\lt x} \lp \p{c
+\lt \p{\p{c\lt y} \lp \p{c\lt z}}} \\
+\p{\p{c\lt \p{c \lt x}} \lp \p{c\lt \p{c \lt y}}} \lp \p{c\lt z} &= \p{c\lt x} \lp
+\p{\p{c\lt \p{c \lt y}} \lp \p{c\lt \p{c \lt z}}} \\
+\p{\p{c\lt \p{c \lt x}} \lp \p{c\lt \p{c \lt y}}} \lp \p{c\lt z} &= \p{\p{c\lt
+x} \lp \p{c\lt \p{c \lt y}}} \lp \p{c\lt \p{c \lt z}} \\
+\p{\p{c\lt c} \lt x} \lp \p{\p{c\lt c} \lt y} \lp \p{c\lt z} &= \p{\p{c\lt
+x} \lp \p{\p{c\lt c} \lt y}} \lp \p{\p{c\lt c} \lt z} \\
+\p{\p{c\lt c} \lt x} \lp \p{c\lt z} &= \p{c\lt x} \lp \p{\p{c\lt c} \lt z}
 \end{align*}
-\caption[]{If $\oplus\p{x,y}=c\lt x \lp c\lt y$ is associative, the above
-should hold for all $x$, $y$ and $z$.}
+\caption[]{If $\oplus\p{x,y}=\p{c\lt x} \lp \p{c\lt y}$ is associative, the
+above should hold for all $x$, $y$ and $z$.}
 \label{figure:first-equality}
 \end{figure*}
 
@@ -63,40 +69,42 @@ replaced by the program text $\p{e_3}$. Add all occurrences to $Q$.
 
 \end{enumerate}
 
-For instance, if $f(x,y)=x\lt c \lp y\lt c$:
+For instance, if $f(x,y)=\p{c\lt x} \lp \p{c\lt y}$:
 
 \begin{align*}
-e_1 &= c\lt x \lp c\lt y \\
-e_2 &= \underbrace{c \lt \p{c\lt x \lp c\lt y}}_{q_1} \lp c \lt z \\
-e_3 &= c\lt y \lp c \lt z \\
-e_4 &= c \lt x \lp \underbrace{c \lt \p{ c \lt y \lp c \lt z }}_{q_2} \\
+e_1 &= \p{c\lt x} \lp \p{c\lt y} \\
+e_2 &= \underbrace{\p{c \lt \p{\p{c\lt x} \lp \p{c\lt y}}}}_{q_1} \lp \p{c \lt
+z} \\
+e_3 &= \p{c\lt y} \lp \p{c \lt z} \\
+e_4 &= \p{c \lt x} \lp \underbrace{\p{c \lt \p{ \p{c \lt y} \lp \p{c \lt z}
+}}}_{q_2} \\
 Q &= \seq{q_1, q_2 }
 \end{align*}
 
 $Q$ is a working queue which we will use to attempt to rewrite $e_2$ and $e_4$
-into syntactically equivalent expression. We proceed to rewrite the
-subexpressions $q_1$ and $q_2$ by applying rewrite rules. A rewrite rule will
-typically introduce new parentheses, which designate monotonically
+into syntactically equivalent expressions. We proceed to rewrite the
+subexpressions $q_1$ and $q_2$ by applying various rewrite rules. A rewrite
+rule will typically introduce new parentheses, which designate monotonically
 nonincreasing subexpressions to be rewritten next.
 
-For instance, from the precedence rules in \referToTable{precedence} and
-\referToFigure{rewriting}, we see that for $q_1$ in the example above we apply
-the rule $\proc{T-Plus-L}$. This rewrites $q_1$ into
+For instance, from the rewrite rules in \referToFigure{rewriting}, we see that
+for $q_1$, in the example above, we apply the rule $\proc{T-Plus-L}$. This
+rewrites $q_1$ into
 
-\[\underbrace{\p{c \lt c \lt x}}_{q_3} \lp \underbrace{\p{c \lt c \lt
-y}}_{q_4},\]
+\[\underbrace{\p{c \lt \p{c \lt x}}}_{q_3} \lp \underbrace{\p{c \lt \p{c \lt
+y}}}_{q_4},\]
 
 where $q_3$ and $q_4$ get queued for rewriting. $q_3$ and $q_4$ both fall prey
 to the associative chaining property of multiplication.
 \referToFigure{rewriting-chaining} indicates that we rewrite such chains to be
-right-associative. If no rewrite rules match a subexpression on the queue, the
+left-associative. If no rewrite rules match a subexpression on the queue, the
 subexpression is simply popped from the queue.
 
 The algorithm terminates if there are no circular rewrites. This can be checked
 by building a \emph{rewrite rule graph} where the nodes are the rewrite rules.
-There is a directed edge from one rewrite rule to another if the rewrite leads
-to a program text rewritable by the other. If there are no cycles in this
-graph, the finite nature of syntax trees of finite programs makes the algorithm
+There is a directed edge from one rewrite rule to another if the rewrite yields
+an expression rewritable by the other. If there are no cycles in this graph,
+the finite nature of syntax trees of finite programs makes the algorithm
 terminate.
 
 \subsection{Rules}
@@ -106,7 +114,8 @@ The incompleteness of the method was proven in \referToSection{undecidability}.
 
 In general, the rewrite rules are based on the observations made in
 \referToSection{chaining}, as well as the distributive laws of various
-operators.
+operators. We keep the algorithm deterministic such that there is at most one
+edge going out of any rewrite rule in the rewrite rule graph.
 
 An operator $\otimes:S\times S\rightarrow S$ is distributive over
 $\oplus:S\times S \rightarrow S$ iff $x \otimes \p{ y \oplus z } = \p{x \otimes
@@ -338,24 +347,24 @@ to multiplying by $2^e$.}
 %independent of $e_x$, $e_y$, and $e_z$.} \label{figure:rewriting-logop}
 %\end{figure*}
 
-\begin{table}
-\centering
-\begin{tabular}{|l|l|l|}
-\hline
-\textbf{Precedence} & \textbf{Operators} & \textbf{Fixity} \\ \hline
-1 & \texttt{not}, \tilde & None \\\hline
-2 & \texttt{pow} & Left \\\hline
-3 & \texttt{*}, \texttt{/}, \texttt{\%} & Left \\\hline
-4 & \texttt{+}, \texttt{-} & Left \\\hline
-5 & \texttt{<{}<{}}, \texttt{>{}>{}} & Left \\\hline
-6 & \texttt{<=}, \texttt{<}, \texttt{=} & None\footnotemark[2] \\\hline
-7 & \texttt{\&}, \texttt{\^}, \texttt{|} & Left \\\hline
-8 & \texttt{\&\&} & Left \\\hline
-9 & \texttt{||} & Left \\\hline
-10 & \texttt{if} & None \\\hline
-\end{tabular}
-\caption[]{The precedence and fixity of operators in L0. Lower precedence means
-stronger binding.}
-\label{table:precedence}
-\end{table}
+%\begin{table}
+%\centering
+%\begin{tabular}{|l|l|l|}
+%\hline
+%\textbf{Precedence} & \textbf{Operators} & \textbf{Fixity} \\ \hline
+%1 & \texttt{not}, \tilde & None \\\hline
+%2 & \texttt{pow} & Left \\\hline
+%3 & \texttt{*}, \texttt{/}, \texttt{\%} & Left \\\hline
+%4 & \texttt{+}, \texttt{-} & Left \\\hline
+%5 & \texttt{<{}<{}}, \texttt{>{}>{}} & Left \\\hline
+%6 & \texttt{<=}, \texttt{<}, \texttt{=} & None\footnotemark[2] \\\hline
+%7 & \texttt{\&}, \texttt{\^}, \texttt{|} & Left \\\hline
+%8 & \texttt{\&\&} & Left \\\hline
+%9 & \texttt{||} & Left \\\hline
+%10 & \texttt{if} & None \\\hline
+%\end{tabular}
+%\caption[]{The precedence and fixity of operators in L0. Lower precedence means
+%stronger binding.}
+%\label{table:precedence}
+%\end{table}
 

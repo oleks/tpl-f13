@@ -38,21 +38,22 @@ rules. Especially useful would be generalised rules about \texttt{min},
 A third, perhaps less useful direction is to generate variable constraints for
 unconstrained variables if the function were to be made associative.
 
-If $\oplus\p{x,y,c} = c\lt x \lp c \lt y$, and we would like to know
+If $\oplus\p{x,y,c} = \p{c\lt x} \lp \p{c \lt y}$, and we would like to know
 whether $\oplus$ is associative wrt. $x$ and $y$, we reach no useful conclusion
 with the above method. We can find out whether there exists a $c$ for which
 this property holds:
 
 \begin{align*}
-c \lt c \lt x \lp c \lt z &= c \lt x \lp c \lt c \lt z \\
-c \lt x \lp z &= x \lp c \lt z \\
-c \lt x \lm c \lt z &= x \lm z \\
+\p{\p{c \lt c} \lt x} \lp \p{c \lt z} &= \p{c \lt x} \lp \p{\p{c \lt c} \lt z} \\
+\p{c \lt \p{c \lt x}} \lp \p{c \lt z} &= \p{c \lt x} \lp \p{c \lt \p{c \lt z}} \\
+\p{c \lt x} \lp z &= x \lp \p{c \lt z} \\
+\p{c \lt x} \lm \p{c \lt z} &= x \lm z \\
 c \lt \p{x \lm z} &= x \lm z \\
 c &= \p{x \lm z} \ld  \p{x \lm z} \\
 c &= 1
 \end{align*}
 
-The compiler should at this point suggest that $c$ be replaced by a constant if
-the function is to be associative. Such an analysis may not reveal a constant,
-but instead a range or a set of possible values.
+The compiler could at this point suggest that $c$ be replaced by a constant if
+the function is to be associative. Such an analysis may reveal a constant, a
+range, or a set of possible values, or it may fail completely.
 
