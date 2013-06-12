@@ -122,17 +122,17 @@ $\oplus:S\times S \rightarrow S$ iff $x \otimes \p{ y \oplus z } = \p{x \otimes
 y} \oplus \p{x \otimes z}$(it is left-distributive) and $\p{y \oplus z} \otimes
 x = \p{y \otimes x} \oplus \p{z \otimes x}$(it is right-distributive).
 
-First and foremost there are the rewrite rules that follow directly from
-\referToSection{chaining}. We specify only their left-associative parts because
-otherwise this would lead to cycles in the rewrite rule graph. We chose to
-rewrite all chains into left-associative chains as most operators in L0 are
-left-associative. We hypothesise this will make the recursion bottom out faster
-in practice.
+First, there are the rewrite rules that follow directly from
+\referToSection{chaining} in \referToFigure{rewriting-chaining}. We specify
+only their left-associative parts because otherwise this would lead to cycles
+in the rewrite rule graph. We chose to rewrite all chains into left-associative
+chains as most operators in L0 are left-associative. We hypothesise this will
+make the recursion bottom out faster in practice.
 
-To construct the rules we proceed as follows: for every operator $\otimes$,
-consider every other operator $\oplus$, as to whether $\otimes$ is distributive
-over $\oplus$. We summarise our results for the arithmetic, logical, and
-bitwise operators in \referToFigure{rewriting}.
+Second, we have the rules for various arithmetic, logical, and bitwise
+operators in \referToFigure{rewriting}. To construct the rules we proceed as
+follows: for every operator $\otimes$, consider every other operator $\oplus$,
+as to whether $\otimes$ is distributive over $\oplus$.
 
 Similar rules can be written for \texttt{min}, \texttt{max}, and
 \texttt{if-then-else}. \texttt{concat} however does not distribute over any of
