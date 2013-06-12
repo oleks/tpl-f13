@@ -1,3 +1,28 @@
 \section{Future work}
 
-TODO
+One possible direction of future work is to expand Light's test beyond bitwise
+operators. We can make the observation that a binary addition is a ternary
+bitwise operator, where for every pair of bits there is a third, carry bit.
+
+If we apply the idea of our associative type, we can state the problem of
+testing the associativity of integer addition as testing whether $f\p{x,y,c}$
+is associative, i.e. whether for all $x,y,z,c\in \set{0,1}$:
+
+\[f\p{f\p{x,y,c}, z,c} = f\p{x, f\p{y,z,c},c}.\]
+
+Light's associativity can be applied here by first letting $c=0$ and then
+letting $c=1$. If $f$ turns out to be associative in both these cases, we can
+say that $f$ is associative in general.
+
+This approach requires time linear in the number of carry-based operations in
+the function body, i.e. there is an independent carry bit for every addition.
+
+Subtraction can be dealt with in a similar way, if we keep in mind that $x\lp
+y=x \lp(\lneg y)$. Other operators however, get more tricky as we have to keep
+more than a single carry bit in mind when doing multiplication, division,
+raising to various powers, bit shifting, etc.
+
+Another possible direction of future work is expading the set of rewriting
+rules. Especially useful would be generalised rules about \texttt{min},
+\texttt{max}, and \texttt{if-then-else}.
+
