@@ -4,9 +4,16 @@ One possible direction of future work is to expand Light's test beyond bitwise
 operators. We can make the observation that a binary addition is a ternary
 bitwise operator, where for every pair of bits there is a third, carry bit.
 
-If we apply the idea of our associative type, we can state the problem of
-testing the associativity of integer addition as testing whether $f\p{x,y,c}$
-is associative, i.e. whether for all $x,y,z,c\in \set{0,1}$:
+We can state addition as a bitwise operation, i.e. $f : \set{0,1} \times
+\set{0,1} \times \set{0,1} \rightarrow \set{0,1} \times \set{0,1}$, and
+$f\p{x,y,c}=\p{\p{x \oplus y} \oplus c, \p{x \wedge y} \vee \p{ \p{ x \vee y}
+\wedge c}}$, where the first element is the result bit, and the second element
+is the carry bit. Note, a function like $f$ in L0, using bitwise operators over
+integers, is by no means the same as addition over integers.
+
+If we apply the idea of the associative type, we can state the problem of
+testing the associativity of integer addition as testing whether for all
+$x,y,z,c\in \set{0,1}$:
 
 \[f\p{f\p{x,y,c}, z,c} = f\p{x, f\p{y,z,c},c}.\]
 
@@ -15,14 +22,37 @@ letting $c=1$. If $f$ turns out to be associative in both these cases, we can
 say that $f$ is associative in general.
 
 This approach requires time linear in the number of carry-based operations in
-the function body, i.e. there is an independent carry bit for every addition.
+the function body, i.e. there is an independent carry bit for each such
+operation. This makes the problem feasible such operations, unlike considering
+the entire integer domain.
 
-Subtraction can be dealt with in a similar way, if we keep in mind that $x\lp
-y=x \lp(\lneg y)$. Other operators however, get more tricky as we have to keep
-more than a single carry bit in mind when doing multiplication, division,
-raising to various powers, bit shifting, etc.
+Subtraction can be dealt with in a similar manner, if we keep in mind that
+$x\lp y=x \lp(\lneg y)$. Other operators however, get more tricky as we have to
+keep more than a single carry bit in mind when doing e.g. multiplication,
+division, raising to various powers, or bit shifting.
 
 Another possible direction of future work is expading the set of rewriting
 rules. Especially useful would be generalised rules about \texttt{min},
 \texttt{max}, and \texttt{if-then-else}.
+
+A third, perhaps less useful direction is to generate variable constraints for
+unconstrained variables if the function were to be made associative.
+
+If $\oplus\p{x,y,c} = c\lt x \lp c \lt y$, and we would like to know
+whether $\oplus$ is associative wrt. $x$ and $y$, we reach no useful conclusion
+with the above method. We can find out whether there exists a $c$ for which
+this property holds:
+
+\begin{align*}
+c \lt c \lt x \lp c \lt z &= c \lt x \lp c \lt c \lt z \\
+c \lt x \lp z &= x \lp c \lt z \\
+c \lt x \lm c \lt z &= x \lm z \\
+c \lt \p{x \lm z} &= x \lm z \\
+c &= \p{x \lm z} \ld  \p{x \lm z} \\
+c &= 1
+\end{align*}
+
+The compiler should at this point suggest that $c$ be replaced by a constant if
+the function is to be associative. Such an analysis may not reveal a constant,
+but instead a range or a set of possible values.
 

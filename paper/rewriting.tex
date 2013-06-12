@@ -359,24 +359,3 @@ stronger binding.}
 \label{table:precedence}
 \end{table}
 
-\subsection{Generating variable constraints}
-
-If instead, $\oplus\p{x,y,c} = c\lt x \lp c \lt y$, and we would like to know
-whether $\oplus$ is associative wrt. $x$ and $y$, we reach no useful conclusion
-with the above method. We can find out whether there exists a $c$ for which
-this property holds:
-
-\begin{align*}
-c \lt c \lt x \lp c \lt z &= c \lt x \lp c \lt c \lt z \\
-c \lt x \lp z &= x \lp c \lt z \\
-c \lt x \lm c \lt z &= x \lm z \\
-c \lt \p{x \lm z} &= x \lm z \\
-c &= \p{x \lm z} \ld  \p{x \lm z} \\
-c &= 1
-\end{align*}
-
-The compiler should at this point suggest that $c$ be replaced by a constant if
-the function is to be associative. Such an analysis may not reveal a constant,
-but instead a range or a set of possible values. Solving arbitrary algebraic
-expressions is beyond the scope of this paper. 
-
