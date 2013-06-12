@@ -74,14 +74,14 @@ Q &= \seq{q_1, q_2 }
 \end{align*}
 
 $Q$ is a working queue which we will use to attempt to rewrite $e_2$ and $e_4$
-into syntactically equivalent program texts. We proceed to rewrite the
-subexpressions $q_1$ and $q_2$ by applying a rewrite rule. A rewrite rule will
+into syntactically equivalent expression. We proceed to rewrite the
+subexpressions $q_1$ and $q_2$ by applying rewrite rules. A rewrite rule will
 typically introduce new parentheses, which designate monotonically
 nonincreasing subexpressions to be rewritten next.
 
 For instance, from the precedence rules in \referToTable{precedence} and
 \referToFigure{rewriting}, we see that for $q_1$ in the example above we apply
-the rule $\proc{P-Times-Plus-R}$. This rewrites $q_1$ into
+the rule $\proc{T-Plus-L}$. This rewrites $q_1$ into
 
 \[\underbrace{\p{c \lt c \lt x}}_{q_3} \lp \underbrace{\p{c \lt c \lt
 y}}_{q_4},\]
@@ -183,7 +183,7 @@ e \LBSR \p{e_1\LBSR e_2} \rightarrow \p{e \LBSR e_1} \LBSR e_2
 \label{figure:rewriting-chaining}
 \end{figure*}
 
-\begin{figure}[htbp!]
+\begin{figure*}[htbp!]
 \[
 \begin{matrix}
 \proc{P-Minus-L}:{\over
@@ -191,43 +191,43 @@ e \lp \p{e_1 \lm e_2} \rightarrow \p{e \lp e_1 } \lm e_2
 }\\
 \proc{P-Min-L}:{\over
 e \lp \LMIN\p{e_1, e_2} \rightarrow \LMIN\p{\p{e \lp e_1}, \p{e \lp e_2}}
-}\\
+}\quad
 \proc{P-Max-L}:{\over
 e \lp \LMAX\p{e_1, e_2} \rightarrow \LMAX\p{\p{e \lp e_1}, \p{e \lp e_2}}
 }\\
-\proc{T-Mod-L}:{\over
-e \lt \p{e_1 \lmod e_2}\rightarrow \p{ e \lt e_1 } \lmod \p{ e \lt e_2 }
-}\\
 \proc{T-Plus-L}:{\over
 e \lt \p{e_1 \lp e_2} \rightarrow \p{ e \lt e_1 } \lp \p{ e \lt e_2 }
-}\\
+}\quad
 \proc{T-Minus-L}:{\over
 e \lt \p{e_1 \lm e_2} \rightarrow \p{ e\lt e_1 } \lm \p{ e \lt e_2 }
 }\\
+\proc{T-Mod-L}:{\over
+e \lt \p{e_1 \lmod e_2}\rightarrow \p{ e \lt e_1 } \lmod \p{ e \lt e_2 }
+}\quad
 \proc{T-ShiftL-L}:{\over
 e \lt \p{e_1 \LBSL e_2} \rightarrow \p{ e \lt e_1 } \LBSL e_2
 }\\
 \proc{T-Min-L}:{\over
 e \lt \LMIN\p{e_1, e_2} \rightarrow \LMIN\p{\p{e \lt e_1}, \p{e \lt e_2}}
-}\\
+}\quad
 \proc{T-Max-L}:{\over
 e \lt \LMAX\p{e_1, e_2} \rightarrow \LMAX\p{\p{e \lt e_1}, \p{e \lt e_2}}
 }\\
 \proc{A-Or-L}:{\over
 e \LAND \p{e_1 \LOR e_2}\rightarrow \p{ e \LAND e_1 } \LOR \p{ e \LAND e_2 }
-}\\
+}\quad
 \proc{BA-BOr-L}:{\over
 e \LBAND \p{e_1 \LBOR e_2}\rightarrow \p{ e \LBAND e_1 } \LBOR \p{ e \LBAND e_2
 }
-}\\
+}
 \end{matrix}
 \]
-\caption[]{Rewriting rules for arithmetic logical and bitwise operators. The
+\caption[]{Rewriting rules for arithmetic, logical, and bitwise operators. The
 above rules cover only left-distributive laws. Right-distributive laws have
 symmetrical rewrite rules.  Note, bit shifting to the left by $e$ is equivalent
 to multiplying by $2^e$.}
 \label{figure:rewriting}
-\end{figure}
+\end{figure*}
 
 %\begin{figure*}[htbp!]
 %\[
