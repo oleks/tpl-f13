@@ -1,0 +1,153 @@
+\documentclass[12pt, serif, xcolor=table]{beamer}
+
+\usepackage{textpos}
+\usepackage{paralist}
+\usepackage{enumitem}
+\usepackage{expdlist}
+\usepackage{subfigure}
+\usepackage{amssymb, amsmath, amsthm}
+\everymath{\displaystyle}
+
+\usepackage[T1]{fontenc}
+%\usepackage{mathpazo}
+
+\definecolor{shade}{RGB}{240,240,240}
+
+%\newcommand{\mono}[1]{\texttt{#1}}
+%\newcommand{\textt}[1]{\ensuremath{\text{\mono{#1}}}}
+%\newcommand{\mathmono}[1]{\ensuremath{\text{\mono{#1}}}}
+%\newcommand{\nonterm}[1]{\ensuremath{\text{\mono{<#1>}}}}
+%\newcommand{\term}[1]{\ensuremath{\text{\mono{`#1'}}}}
+%\newcommand{\any}[0]{\ensuremath{\left\langle\bigtriangleup\right\rangle}}
+%\newcommand{\D}{$\Delta$}
+
+\usepackage{xparse}
+\usepackage{survival-pack}
+\usepackage{euler}
+
+\newcommand{\makeTable}[6][htbp!]
+{
+  \begin{table}[#1]
+  \centering
+  \begin{tabular}{#4}
+  #5\\
+  #6
+  \end{tabular}
+  \end{table}
+}
+
+\newcommand{\includeFigure}[4][htbp!]
+{
+  \begin{figure}[#4]
+  \centering
+  \IfDecimal{#1}
+  {
+    \includegraphics[scale=#1]{figures/#2}
+  }
+  {
+    \includegraphics[#1]{figures/#2}
+  }
+  \caption[]{#3}
+  \label{figure:#2}
+  \end{figure}
+}
+
+\usepackage{clrscode3e}
+\usepackage{verbatim}
+\usepackage{listings}
+\lstset
+{
+  tabsize=2,
+  numbers=left,
+  breaklines=true,
+  foregroundcolor=\color{shade},
+  framexleftmargin=0.05in,
+  basicstyle=\ttfamily\small,
+  numberstyle=\tiny,
+%  keywordstyle=\color{green},
+%	stringstyle=\color{red},
+%	commentstyle=\color{ForestGreen},
+  keywords={input},
+  mathescape=true,
+  captionpos=b,
+  escapeinside={(*@}{@*)},
+  language=haskell
+}
+
+%\beamertemplatenavigationsymbolsempty
+
+\setbeamercolor{title}{fg=shade,bg=black}
+\setbeamercolor{frametitle}{fg=shade}
+\setbeamercolor{normal text}{fg=shade}
+\setbeamercolor{background canvas}{bg=black}
+\setbeamercolor{normal text}{bg=black}
+\setbeamercolor{bibliography item}{fg=shade}
+\setbeamercolor{bibliography entry author}{fg=shade}
+\setbeamertemplate{bibliography item}[text]
+
+\renewcommand\tilde[0]{{\raise.17ex\hbox{$\scriptstyle\sim$}}}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+\newcommand{\bi}{$\bullet$\ }
+
+\newcommand{\lp}[0]{\,\ifmmode \text{\texttt{+}} \else \texttt{+} \fi\,}
+\newcommand{\lt}[0]{\,\ifmmode \text{\texttt{*}} \else \texttt{*} \fi\,}
+\newcommand{\lm}[0]{\,\ifmmode \text{\texttt{-}} \else \texttt{-} \fi\,}
+\newcommand{\ld}[0]{\,\ifmmode \text{\texttt{/}} \else \texttt{/} \fi\,}
+\newcommand{\lmod}[0]{\,\ifmmode \text{\texttt{\%}} \else \texttt{\%} \fi\,}
+\newcommand{\lpow}[0]{\,\ifmmode \text{\texttt{pow}} \else \texttt{pow} \fi}
+\newcommand{\lneg}[0]{{}\ifmmode \text{\tilde} \else \tilde \fi{}}
+
+\newcommand{\LOR}[0]{\,\ifmmode \text{\texttt{||}} \else \texttt{||} \fi\,}
+\newcommand{\LAND}[0]{\,\ifmmode \text{\texttt{\&\&}} \else \texttt{\&\&} \fi\,}
+\newcommand{\LNOT}[0]{\,\ifmmode \text{\texttt{not}} \else \texttt{not} \fi\,}
+
+\newcommand{\LBXOR}[0]{\,\ifmmode \text{\texttt{\^}} \else \texttt{\^} \fi\,}
+\newcommand{\LBAND}[0]{\,\ifmmode \text{\texttt{\&}} \else \texttt{\&} \fi\,}
+\newcommand{\LBOR}[0]{\,\ifmmode \text{\texttt{|}} \else \texttt{|} \fi\,}
+\newcommand{\LBSL}[0]{\,\ifmmode \text{\texttt{<{}<{}}} \else \texttt{<{}<{}} \fi\,}
+\newcommand{\LBSR}[0]{\,\ifmmode \text{\texttt{>{}>{}}} \else \texttt{>{}>{}} \fi\,}
+
+\newcommand{\LCONCAT}[0]{\,\ifmmode \text{\texttt{concat}} \else
+\texttt{concat} \fi\,}
+
+\newcommand{\LMIN}[0]{\,\ifmmode \text{\texttt{min}} \else \texttt{min} \fi}
+\newcommand{\LMAX}[0]{\,\ifmmode \text{\texttt{max}} \else \texttt{max} \fi}
+
+\title{Deciding associativity in L0}
+\author{Kristoffer S\o holm \& Oleksandr Shturmov}
+\date{June 19, 2013}
+
+\begin{document}
+
+\begin{frame}
+
+\titlepage
+
+\end{frame}
+
+% Use danish to have a more natural discussion. This may require us to change
+% along the way as the concepts become too entangled in english terms.
+
+%\begin{frame}
+
+%\frametitle{Overview}
+
+%\tableofcontents
+
+%\end{frame}
+
+\input{associativity}
+\input{l0}
+\input{benchmark}
+\input{undecidability}
+\input{the-associative-type}
+\input{chaining}
+\input{light}
+\input{rewriting}
+\input{future-work}
+\input{conclusion}
+\input{references}
+
+\end{document}

@@ -1,0 +1,133 @@
+\begin{frame}[plain]
+
+\frametitle{Rewriting}
+
+Consider
+
+\[\left(x\oplus y\right)\oplus z = x \oplus \left(y \oplus z\right).\]
+
+Expand all applications of $\oplus$\footnotemark[4] and see if the expressions
+on either side of the equality are semantically equivalent.
+
+\footnotetext[4]{Take care not to recurse.}
+
+\end{frame}
+
+\begin{frame}[plain]
+
+\frametitle{Rewriting}
+
+Consider
+
+\[\left(x\oplus y\right)\oplus z = x \oplus \left(y \oplus z\right).\]
+
+This can be done by rewriting the expressions until they are semantically
+equivalent, or until we've run out of rules.
+
+\ \\
+
+Note, the variables appear in the same order on either side of the equality. If
+the rewriting rules respect this order, there is no need for normalization.
+
+\ \\
+
+The rewriting rules must also respect overflow properties\footnotemark[5].
+
+\footnotetext[5]{They don't.}
+
+\end{frame}
+
+\begin{frame}
+
+\frametitle{Rewrite to be left-associative}
+
+\footnotesize
+\[
+\begin{matrix}
+\proc{Plus}:{\over
+e \lp \p{e_1 \lp e_2} \rightarrow \p{ e \lp e_1} \lp e_2
+}\\
+\proc{Times}:{\over
+e \lt \p{e_1\lt e_2} \rightarrow \p{e \lt e_1} \lt e_2
+}\\
+\proc{Land}:{\over
+e \LAND \p{e_1 \LAND e_2} \rightarrow \p{ e \LAND e_1} \LAND e_2
+}\\
+\proc{Lor}:{\over
+e \LOR \p{e_1\LOR e_2} \rightarrow \p{e \LOR e_1} \LOR e_2
+}\\
+\proc{Xor}:{\over
+e \LBXOR \p{e_1 \LBXOR e_2} \rightarrow \p{ e \LBXOR e_1} \LBXOR e_2
+}\\
+\proc{Band}:{\over
+e \LBAND \p{e_1 \LAND e_2} \rightarrow \p{ e \LBAND e_1} \LBAND e_2
+}\\
+\proc{Bor}:{\over
+e \LBOR \p{e_1\LBOR e_2} \rightarrow \p{e \LBOR e_1} \LBOR e_2
+}\\
+\proc{BSL}:{\over
+e \LBSL \p{e_1 \LBSL e_2} \rightarrow \p{ e \LBSL e_1} \LBSL e_2
+}\\
+\proc{BSR}:{\over
+e \LBSR \p{e_1\LBSR e_2} \rightarrow \p{e \LBSR e_1} \LBSR e_2
+}\\
+\proc{Min}:{\over
+\LMIN\p{e, \LMIN\p{e_1, e_2}} \rightarrow \LMIN\p{\LMIN\p{ e, e_1}, e_2}
+}\\
+\proc{Min}:{\over
+\LMAX\p{e, \LMAX\p{e_1, e_2}} \rightarrow \LMAX\p{\LMAX\p{ e, e_1}, e_2}
+}\\
+\proc{Concat}:{\over
+\LCONCAT\p{e, \LCONCAT\p{e_1, e_2}} \rightarrow \LCONCAT\p{\LCONCAT\p{ e, e_1}, e_2}
+}\\
+\end{matrix}
+\]
+
+\end{frame}
+
+\begin{frame}[plain]
+
+\frametitle{Left-distributive laws}
+
+\footnotesize
+\[
+\begin{matrix}
+\proc{P-Minus-L}:{\over
+e \lp \p{e_1 \lm e_2} \rightarrow \p{e \lp e_1 } \lm e_2
+}\\
+\proc{P-Min-L}:{\over
+e \lp \LMIN\p{e_1, e_2} \rightarrow \LMIN\p{\p{e \lp e_1}, \p{e \lp e_2}}
+}\footnotemark[5]\\
+\proc{P-Max-L}:{\over
+e \lp \LMAX\p{e_1, e_2} \rightarrow \LMAX\p{\p{e \lp e_1}, \p{e \lp e_2}}
+}\footnotemark[5]\\
+\proc{T-Plus-L}:{\over
+e \lt \p{e_1 \lp e_2} \rightarrow \p{ e \lt e_1 } \lp \p{ e \lt e_2 }
+}\\
+\proc{T-Minus-L}:{\over
+e \lt \p{e_1 \lm e_2} \rightarrow \p{ e\lt e_1 } \lm \p{ e \lt e_2 }
+}\\
+\proc{T-Mod-L}:{\over
+e \lt \p{e_1 \lmod e_2}\rightarrow \p{ e \lt e_1 } \lmod \p{ e \lt e_2 }
+}\\
+\proc{T-ShiftL-L}:{\over
+e \lt \p{e_1 \LBSL e_2} \rightarrow \p{ e \lt e_1 } \LBSL e_2
+}\\
+\proc{T-Min-L}:{\over
+e \lt \LMIN\p{e_1, e_2} \rightarrow \LMIN\p{\p{e \lt e_1}, \p{e \lt e_2}}
+}\footnotemark[5]\\
+\proc{T-Max-L}:{\over
+e \lt \LMAX\p{e_1, e_2} \rightarrow \LMAX\p{\p{e \lt e_1}, \p{e \lt e_2}}
+}\footnotemark[5]\\
+\proc{A-Or-L}:{\over
+e \LAND \p{e_1 \LOR e_2}\rightarrow \p{ e \LAND e_1 } \LOR \p{ e \LAND e_2 }
+}\\
+\proc{BA-BOr-L}:{\over
+e \LBAND \p{e_1 \LBOR e_2}\rightarrow \p{ e \LBAND e_1 } \LBOR \p{ e \LBAND e_2
+}
+}
+\end{matrix}
+\]
+
+
+\end{frame}

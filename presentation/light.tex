@@ -1,0 +1,116 @@
+\begin{frame}[plain]
+
+\frametitle{Light's associativity test}
+
+\bi\ Dr. F. W. Light, 1949 \cite{light}.
+
+\bi\ Is a binop $\oplus$, defined in a finite set $S$, associative?
+
+\bi\ For each $a\in S'$, where $S'$ is a generating set of the group
+$\left(S,\oplus\right)$, construct the Ca\textbf{y}ley tables of
+
+\begin{align*}
+x \circ_{a} y   &= (x \oplus a) \oplus y \\
+x *_{a} y       &= x \oplus (a \oplus y) 
+\end{align*}
+
+\bi\ If the Ca\textbf{y}ley tables are equivalent, $\oplus$ is associative in
+$S$.
+
+\end{frame}
+
+\begin{frame}[plain]
+
+\begin{center}
+$x \oplus y = x \LBXOR y \mid x \LBXOR y$
+\end{center}
+
+\makeTable
+{assoc-array-combinators}
+{Cayley table for the example operator.}
+{|c|c|c|}
+{\hline $\oplus$ & $0$ & $1$}
+{\hline
+    $0$ & $0$ & $1$\\
+    $1$ & $1$ & $0$\\\hline
+}
+
+\begin{center}
+
+$\left\{0,1\right\}$ is a generating set for the group
+$\left(\left\{0,1\right\}, \oplus\right)$\footnote{ $\left\{0\right\}$ clearly
+is not.}.
+
+\end{center}
+
+\begin{table}[h!]
+  \def\arraystretch{1.2}
+  \begin{tabular}{|c|cc|}
+    \hline
+      $\circ_{0}$ & $0$ & $1$\\
+    \hline
+      $0$ & $0$ & $1$ \\
+      $1$ & $1$ & $0$ \\
+    \hline
+  \end{tabular}
+$=$
+  \begin{tabular}{|c|cc|}
+    \hline
+      $*_{0}$ & $0$ & $1$\\
+    \hline
+      $0$ & $0$ & $1$ \\
+      $1$ & $1$ & $0$ \\
+    \hline
+  \end{tabular}
+\quad
+  \begin{tabular}{|c|cc|}
+    \hline
+      $\circ_{1}$ & $0$ & $1$\\
+    \hline
+      $0$ & $1$ & $0$ \\
+      $1$ & $0$ & $1$ \\
+    \hline
+  \end{tabular}
+$=$
+  \begin{tabular}{|c|cc|}
+    \hline
+      $*_{1}$ & $0$ & $1$\\
+    \hline
+      $0$ & $1$ & $0$ \\
+      $1$ & $0$ & $1$ \\
+    \hline
+  \end{tabular}
+
+  \centering
+\end{table}
+
+\end{frame}
+
+\begin{frame}[plain]
+
+\bi\ Only applicable to combinations of \LBXOR, \LBAND, \LBOR\footnotemark[3].
+
+\bi\ Intractable for e.g. the set of 32-bit integers.
+
+\ \\
+
+\bi\ We may use property-based testing \cite{quickcheck}.
+
+\bi\ Test the property for a sufficient subset of $S$.
+
+\bi\ Seems like the most practical approach.
+
+\bi\ Applicable to the entire language, not just a subset.
+
+\ \\
+
+\bi\ The cost is soundness.
+
+\bi\ The test may generate false positives.
+
+\bi\ We conjecture that a non-associative function will typically be
+non-associative for a large subset of $S$.
+
+\footnotetext{Clearly not \LBSL and \LBSR.}
+
+\end{frame}

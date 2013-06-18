@@ -1,0 +1,47 @@
+\begin{frame}[plain]
+
+\frametitle{Associative under chaining? (1/2)}
+
+\makeTable
+{assoc-chaining-arithop}
+{Associativity of chaining arithmetic operators.}
+{cc}
+{\textbf{Operator} & \textbf{Chaining is associative}}
+{
+  \texttt{+}   & yes \\
+  \texttt{*}   & yes \\
+  \texttt{-}   & no \\
+  \texttt{/}   & no \\
+  \texttt{\%}  & no \\
+  \texttt{pow} & no \\
+  \tilde       & yes\footnotemark[1] \\\hline
+  \texttt{\&\&} & yes \\
+  \texttt{||}   & yes \\
+  \texttt{not}  & yes\footnotemark[1]
+}
+
+\footnotetext[1]{By yes we mean no.}
+
+\end{frame}
+
+\begin{frame}[plain]
+
+\frametitle{Associative under chaining? (2/2)}
+
+\makeTable
+{assoc-chaining-arithop}
+{Associativity of chaining arithmetic operators.}
+{cc}
+{\textbf{Operator} & \textbf{Chaining is associative}}
+{
+  \texttt{\^} & yes \\
+  \texttt{\&} & yes \\
+  \texttt{|}  & yes \\
+  \texttt{>{}>} & yes \\
+  \texttt{<{}<} & yes \\\hline
+  \texttt{concat} & yes \\
+  \texttt{min} & yes \\
+  \texttt{max}  & yes
+}
+
+\end{frame}

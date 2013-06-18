@@ -1,0 +1,41 @@
+\begin{frame}[plain]
+
+\begin{center}
+An infix operator $\oplus : S \times S \rightarrow S$ is associative iff
+\end{center}
+
+\[\forall\ x,y,z\in S\ .\ \p{x \oplus y} \oplus z = x \oplus \p{y \oplus z}.\]
+
+\end{frame}
+
+\begin{frame}[plain]
+
+\textbf{Linear reduction}
+
+\ \\
+
+\[\left(\left(\left(\left(\left(\left(x_1\oplus x_2\right) \oplus x_3 \right)
+\oplus x_4 \right) x_5 \right) \oplus x_6 \right) \oplus x_7 \right) \oplus
+x_8\]
+
+\begin{center}
+or
+\end{center}
+
+\[x_1 \oplus \left(x_2 \oplus \left(x_3 \oplus \left( x_4 \oplus \left( x_5
+\oplus \left( x_6 \oplus \left(x_7\oplus x_8\right) \right) \right) \right)
+\right) \right)\]
+
+\end{frame}
+
+\begin{frame}[plain]
+
+\textbf{Tree-like reduction}
+
+\[\big( \left(x_1 \oplus x_2\right) \oplus \left(x_3 \oplus x_4\right) \big)
+\oplus \big( \left(x_5 \oplus x_6 \right) \oplus \left(x_7 \oplus x_8\right)
+\big)\]
+
+\end{frame}
+
+

@@ -1,0 +1,19 @@
+\begin{frame}[plain,fragile]
+
+\frametitle{Is \texttt{redop} associative?}
+
+\begin{verbatim}
+fun (int, int, int, int) redop(
+  (int,int,int,int) a, 
+  (int,int,int,int) b) =
+    let (a0,a1,a2,a3) = a in
+    let (b0,b1,b2,b3) = b in
+    let mss = max( max(a0, b0), a2 + b1 ) in
+    let mis = max( a1, a3 + b1 )          in
+    let mcs = max( a2 + b3, b2 )          in
+    let ts  = a3 + b3                     in
+        (mss, mis, mcs, ts)
+\end{verbatim}
+
+\end{frame}
+

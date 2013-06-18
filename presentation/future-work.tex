@@ -1,0 +1,49 @@
+\begin{frame}[plain]
+
+\frametitle{Future work}
+
+We may consider binary addition as a ternary bitwise operation with an extra,
+carry bit:
+
+\[f : \set{0,1} \times \set{0,1} \times \set{0,1} \rightarrow \set{0,1} \times
+\set{0,1},\]
+
+and
+
+\[f\p{x,y,c}=\p{\p{x \oplus y} \oplus c, \p{x \wedge y} \vee \p{ \p{ x \vee y}
+\wedge c}}.\]
+
+\end{frame}
+
+\begin{frame}[plain]
+
+\frametitle{Future work}
+
+Recall that we said that a homomorphic ternary function was associative in the
+first two arguments iff
+
+\[\forall\ x,y,z,c\in S\ .\ f\p{f\p{x,y,c}, z,c} = f\p{x, f\p{y,z,c},c}.\]
+
+\end{frame}
+
+\begin{frame}[plain]
+
+\frametitle{Future work}
+
+We can apply light's test where we set the carry bit to be first 0, then 1, if
+the function is associative in both cases, it is associative in general.
+
+\ \\
+
+Care must be taken when there are multiple carry-based operations in a function
+body.
+
+\end{frame}
+
+\begin{frame}[plain]
+
+\frametitle{Future work}
+
+Better \LMIN and \LMAX rules would've also been nice.
+
+\end{frame}
