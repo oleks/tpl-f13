@@ -1,5 +1,5 @@
 BASENAME  = main
-FILENAME  = bachelor-shturmov-prsentation
+FILENAME  = tpl-f13-shturmov
 OUTDIR    = $(CURDIR)/output
 OUTFILE   = $(OUTDIR)/$(FILENAME).pdf
 
